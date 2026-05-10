@@ -1,154 +1,7 @@
-import type { Theme, ThemeColors } from "@/types/theme";
+import type { Theme, ThemeColors, ThemeId } from "@/types/theme";
 
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
-
-function starryNightStyles(c: ThemeColors): Theme["styles"] {
-  const { primary, accent, dark, paper, muted } = c;
-  const codeBg = "#EDE8D8";
-  const blockquoteBg = "#F2EFE4";
-  const tbodyTint = "#FAF6EC";
-
-  return {
-    section: {
-      margin: "0 0 1.25em",
-      padding: "1em 1.1em",
-      backgroundColor: paper,
-      color: dark,
-      borderRadius: "8px",
-      boxShadow: "0 1px 3px rgba(13, 27, 42, 0.08)",
-      border: `1px solid ${codeBg}`,
-    },
-    h1: {
-      margin: "0 0 0.65em",
-      paddingBottom: "0.35em",
-      borderBottom: `2px solid ${accent}`,
-      color: dark,
-      fontSize: "1.65em",
-      fontWeight: 600,
-      lineHeight: 1.35,
-      letterSpacing: "-0.02em",
-    },
-    h2: {
-      margin: "1.25em 0 0.5em",
-      color: primary,
-      fontSize: "1.35em",
-      fontWeight: 600,
-      lineHeight: 1.4,
-    },
-    h3: {
-      margin: "1em 0 0.45em",
-      color: primary,
-      fontSize: "1.12em",
-      fontWeight: 600,
-      lineHeight: 1.45,
-    },
-    p: {
-      margin: "0 0 0.9em",
-      color: dark,
-      fontSize: "16px",
-      lineHeight: 1.75,
-    },
-    strong: {
-      color: primary,
-      fontWeight: 600,
-    },
-    em: {
-      color: muted,
-      fontStyle: "italic",
-    },
-    blockquote: {
-      margin: "0 0 1em",
-      padding: "0.85em 1em",
-      borderLeft: `4px solid ${accent}`,
-      backgroundColor: blockquoteBg,
-      color: dark,
-      fontSize: "15px",
-      lineHeight: 1.7,
-      borderRadius: "0 6px 6px 0",
-    },
-    ul: {
-      margin: "0 0 1em",
-      paddingLeft: "1.35em",
-      color: dark,
-      lineHeight: 1.75,
-    },
-    ol: {
-      margin: "0 0 1em",
-      paddingLeft: "1.35em",
-      color: dark,
-      lineHeight: 1.75,
-    },
-    li: {
-      margin: "0.35em 0",
-    },
-    a: {
-      color: primary,
-      textDecoration: "underline",
-      textDecorationColor: accent,
-      textUnderlineOffset: "3px",
-    },
-    code: {
-      fontFamily: mono,
-      fontSize: "0.9em",
-      backgroundColor: codeBg,
-      color: primary,
-      padding: "0.15em 0.45em",
-      borderRadius: "4px",
-    },
-    pre: {
-      margin: "0 0 1em",
-      padding: "1em 1.1em",
-      backgroundColor: dark,
-      color: paper,
-      fontSize: "14px",
-      lineHeight: 1.55,
-      borderRadius: "8px",
-      overflowX: "auto",
-      fontFamily: mono,
-      border: `1px solid ${primary}`,
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      margin: "0 0 1em",
-      fontSize: "15px",
-      lineHeight: 1.6,
-    },
-    thead: {
-      backgroundColor: primary,
-      color: paper,
-    },
-    tbody: {
-      backgroundColor: tbodyTint,
-    },
-    tr: {
-      borderBottom: `1px solid ${codeBg}`,
-    },
-    th: {
-      padding: "10px 12px",
-      textAlign: "left",
-      fontWeight: 600,
-      border: `1px solid ${primary}`,
-    },
-    td: {
-      padding: "10px 12px",
-      border: `1px solid #E8E0D0`,
-      color: dark,
-    },
-    img: {
-      display: "block",
-      margin: "0.75em 0",
-      borderRadius: "4px",
-    },
-    hr: {
-      margin: "1.5em 0",
-      border: "none",
-      borderTop: `1px solid ${muted}`,
-      opacity: 0.85,
-    },
-  };
-}
 
 function minimalStyles(c: ThemeColors): Theme["styles"] {
   const { dark, paper, muted } = c;
@@ -298,7 +151,7 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
   };
 }
 
-function warmCardStyles(c: ThemeColors): Theme["styles"] {
+function starshipStyles(c: ThemeColors): Theme["styles"] {
   const { primary, accent, dark, paper, muted } = c;
 
   return {
@@ -451,14 +304,6 @@ function warmCardStyles(c: ThemeColors): Theme["styles"] {
   };
 }
 
-const STARRY_COLORS: ThemeColors = {
-  primary: "#1E3A5F",
-  accent: "#F4A261",
-  dark: "#0D1B2A",
-  paper: "#F8F4E3",
-  muted: "#6B7280",
-};
-
 const MINIMAL_COLORS: ThemeColors = {
   primary: "#1F2937",
   accent: "#6B7280",
@@ -467,19 +312,12 @@ const MINIMAL_COLORS: ThemeColors = {
   muted: "#8A8F98",
 };
 
-const WARM_COLORS: ThemeColors = {
+const STARSHIP_COLORS: ThemeColors = {
   primary: "#1E3A8A",
   accent: "#38BDF8",
   dark: "#0F172A",
   paper: "#F8FAFC",
   muted: "#64748B",
-};
-
-export const starryNight: Theme = {
-  id: "starryNight",
-  name: "星夜手记",
-  colors: STARRY_COLORS,
-  styles: starryNightStyles(STARRY_COLORS),
 };
 
 export const minimal: Theme = {
@@ -489,16 +327,28 @@ export const minimal: Theme = {
   styles: minimalStyles(MINIMAL_COLORS),
 };
 
-export const warmCard: Theme = {
-  id: "warmCard",
+export const starship: Theme = {
+  id: "starship",
   name: "星舰科技",
-  colors: WARM_COLORS,
-  styles: warmCardStyles(WARM_COLORS),
+  colors: STARSHIP_COLORS,
+  styles: starshipStyles(STARSHIP_COLORS),
 };
 
-export const THEMES: Theme[] = [starryNight, minimal, warmCard];
+export const THEMES: Theme[] = [minimal, starship];
 
-export const DEFAULT_THEME_ID = "starryNight" as const;
+/** Old localStorage / bookmarks may still use these keys. */
+const LEGACY_THEME_ID_MAP: Record<string, ThemeId> = {
+  warmCard: "starship",
+};
+
+export function normalizeStoredThemeId(raw: string | null): ThemeId | null {
+  if (raw === null || raw === "") return null;
+  const candidate = LEGACY_THEME_ID_MAP[raw] ?? raw;
+  const theme = THEMES.find((t) => t.id === candidate);
+  return theme ? theme.id : null;
+}
+
+export const DEFAULT_THEME_ID = "minimal" as const;
 
 export const DEFAULT_THEME =
-  THEMES.find((t) => t.id === DEFAULT_THEME_ID) ?? starryNight;
+  THEMES.find((t) => t.id === DEFAULT_THEME_ID) ?? minimal;

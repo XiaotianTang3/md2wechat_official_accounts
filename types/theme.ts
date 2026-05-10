@@ -8,7 +8,7 @@ export type ThemeColors = {
   muted: string;
 };
 
-export type ThemeId = "starryNight" | "minimal" | "warmCard";
+export type ThemeId = "minimal" | "starship";
 
 export type Theme = {
   id: ThemeId;

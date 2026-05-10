@@ -26,7 +26,12 @@ import {
   saveDraft,
   saveThemeId,
 } from "@/lib/storage";
-import { DEFAULT_THEME, DEFAULT_THEME_ID, THEMES } from "@/lib/themes";
+import {
+  DEFAULT_THEME,
+  DEFAULT_THEME_ID,
+  normalizeStoredThemeId,
+  THEMES,
+} from "@/lib/themes";
 import type { ThemeId } from "@/types/theme";
 
 const HINT_MS = 2500;
@@ -59,8 +64,9 @@ export default function Home() {
     if (draft !== null) {
       setMarkdown(draft);
     }
-    if (tid !== null && isThemeId(tid)) {
-      setThemeId(tid);
+    const normalized = normalizeStoredThemeId(tid);
+    if (normalized !== null) {
+      setThemeId(normalized);
     }
     setStorageReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
