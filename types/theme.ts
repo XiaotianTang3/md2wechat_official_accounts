@@ -1,5 +1,19 @@
 import type { CSSProperties } from "react";
 
+export type LayoutThemeId = "minimal" | "starship";
+
+export type ColorPaletteId =
+  | "default"
+  | "inkGray"
+  | "starBlue"
+  | "teal"
+  | "filmBrown"
+  | "violetMist"
+  | "warmOrange";
+
+// Phase 1: UI still selects a single "theme" (layout).
+export type ThemeId = LayoutThemeId;
+
 export type ThemeColors = {
   primary: string;
   accent: string;
@@ -8,11 +22,24 @@ export type ThemeColors = {
   muted: string;
 };
 
-export type ThemeId = "minimal" | "starship";
-
 export type Theme = {
-  id: ThemeId;
+  id: LayoutThemeId;
   name: string;
   colors: ThemeColors;
   styles: Partial<Record<string, CSSProperties>>;
+};
+
+export type LayoutTheme = {
+  id: LayoutThemeId;
+  name: string;
+  defaultColors: ThemeColors;
+  createStyles: (colors: ThemeColors) => Theme["styles"];
+};
+
+export type ColorPalette = {
+  id: ColorPaletteId;
+  name: string;
+  description?: string;
+  /** `default` intentionally has no fixed colors. */
+  colors?: ThemeColors;
 };

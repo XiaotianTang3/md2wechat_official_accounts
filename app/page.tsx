@@ -22,32 +22,31 @@ import { markdownToHtml } from "@/lib/markdown";
 import { SAMPLE_MARKDOWN } from "@/lib/sample-markdown";
 import {
   loadDraft,
+  loadPaletteId,
   loadThemeId,
   saveDraft,
+  savePaletteId,
   saveThemeId,
 } from "@/lib/storage";
-import {
-  DEFAULT_THEME,
-  DEFAULT_THEME_ID,
-  normalizeStoredThemeId,
-  THEMES,
-} from "@/lib/themes";
-import type { ThemeId } from "@/types/theme";
+import { resolvePaletteColors, normalizeStoredPaletteId } from "@/lib/palettes";
+import { createTheme, DEFAULT_THEME_ID, THEMES } from "@/lib/themes";
+import type { ColorPaletteId, LayoutThemeId } from "@/types/theme";
 
 const HINT_MS = 2500;
 
-function isThemeId(id: string): id is ThemeId {
+function isThemeId(id: string): id is LayoutThemeId {
   return THEMES.some((t) => t.id === id);
 }
 
 export default function Home() {
   const [markdown, setMarkdown] = useState(SAMPLE_MARKDOWN);
-  const [themeId, setThemeId] = useState<ThemeId>(DEFAULT_THEME_ID);
+  const [layoutId, setLayoutId] = useState<LayoutThemeId>(DEFAULT_THEME_ID);
+  const [paletteId, setPaletteId] = useState<ColorPaletteId>("default");
   const [storageReady, setStorageReady] = useState(false);
-  const currentTheme = useMemo(
-    () => THEMES.find((t) => t.id === themeId) ?? DEFAULT_THEME,
-    [themeId],
-  );
+  const currentTheme = useMemo(() => {
+    const colors = resolvePaletteColors(layoutId, paletteId);
+    return createTheme(layoutId, colors);
+  }, [layoutId, paletteId]);
   const [html, setHtml] = useState("");
   const [copyHint, setCopyHint] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -60,14 +59,15 @@ export default function Home() {
     /* eslint-disable react-hooks/set-state-in-effect */
     const draft = loadDraft();
     const tid = loadThemeId();
+    const pid = loadPaletteId();
 
     if (draft !== null) {
       setMarkdown(draft);
     }
-    const normalized = normalizeStoredThemeId(tid);
-    if (normalized !== null) {
-      setThemeId(normalized);
-    }
+    const initialLayoutId =
+      tid !== null && isThemeId(tid) ? tid : DEFAULT_THEME_ID;
+    setLayoutId(initialLayoutId);
+    setPaletteId(normalizeStoredPaletteId(pid));
     setStorageReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -75,8 +75,9 @@ export default function Home() {
   useEffect(() => {
     if (!storageReady) return;
     saveDraft(markdown);
-    saveThemeId(themeId);
-  }, [markdown, themeId, storageReady]);
+    saveThemeId(layoutId);
+    savePaletteId(paletteId);
+  }, [markdown, layoutId, paletteId, storageReady]);
 
   useEffect(() => {
     const id = ++requestId.current;
@@ -139,8 +140,8 @@ export default function Home() {
   }
 
   function handleExportHtml() {
-    const paper = currentTheme.colors.paper;
-    const sectionStyle = `max-width:720px;margin:0 auto;padding:24px;box-sizing:border-box;background-color:${paper};`;
+    const sectionStyle =
+      "max-width:720px;margin:0 auto;padding:24px;box-sizing:border-box;background-color:#ffffff;";
     exportHtmlDocument(html, {
       title: "Wechat Article",
       sectionStyle,
@@ -169,10 +170,13 @@ export default function Home() {
       />
       <Toolbar
         themes={THEMES}
-        themeId={themeId}
+        themeId={layoutId}
         onThemeIdChange={(id) => {
-          if (isThemeId(id)) setThemeId(id);
+          if (isThemeId(id)) setLayoutId(id);
         }}
+        paletteId={paletteId}
+        onPaletteIdChange={setPaletteId}
+        paletteSwatchColors={resolvePaletteColors(layoutId, paletteId)}
         primaryAccentColor={currentTheme.colors.primary}
         onImportMarkdown={handleImportMarkdownClick}
         onExportMarkdown={handleExportMarkdown}
@@ -184,11 +188,7 @@ export default function Home() {
       />
       <div className="flex min-h-0 flex-1">
         <EditorPane value={markdown} onChange={setMarkdown} />
-        <PreviewPane
-          html={html}
-          isPending={isPending}
-          shellBackground={currentTheme.colors.paper}
-        />
+        <PreviewPane html={html} isPending={isPending} />
       </div>
     </div>
   );

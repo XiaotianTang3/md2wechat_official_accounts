@@ -1,5 +1,6 @@
 export const STORAGE_KEY_DRAFT = "wechat-md-editor:draft";
 export const STORAGE_KEY_THEME = "wechat-md-editor:theme";
+export const STORAGE_KEY_PALETTE = "wechat-md-editor:palette";
 
 function canUseStorage(): boolean {
   return typeof window !== "undefined" && typeof localStorage !== "undefined";
@@ -38,6 +39,24 @@ export function saveThemeId(themeId: string): void {
   if (!canUseStorage()) return;
   try {
     localStorage.setItem(STORAGE_KEY_THEME, themeId);
+  } catch {
+    /* quota or private mode */
+  }
+}
+
+export function loadPaletteId(): string | null {
+  if (!canUseStorage()) return null;
+  try {
+    return localStorage.getItem(STORAGE_KEY_PALETTE);
+  } catch {
+    return null;
+  }
+}
+
+export function savePaletteId(paletteId: string): void {
+  if (!canUseStorage()) return;
+  try {
+    localStorage.setItem(STORAGE_KEY_PALETTE, paletteId);
   } catch {
     /* quota or private mode */
   }

@@ -1,0 +1,102 @@
+import type { ColorPalette, ColorPaletteId, LayoutThemeId, ThemeColors } from "@/types/theme";
+import { DEFAULT_THEME_ID, LAYOUT_THEMES } from "@/lib/themes";
+
+export const PALETTES: ColorPalette[] = [
+  { id: "default", name: "默认" },
+  {
+    id: "inkGray",
+    name: "墨黑灰",
+    description: "适合正式长文。",
+    colors: {
+      primary: "#1F2937",
+      accent: "#6B7280",
+      dark: "#111827",
+      paper: "#FFFFFF",
+      muted: "#8A8F98",
+    },
+  },
+  {
+    id: "starBlue",
+    name: "星空蓝",
+    description: "适合科技分析、AI 产品文章。",
+    colors: {
+      primary: "#1E3A8A",
+      accent: "#38BDF8",
+      dark: "#0F172A",
+      paper: "#F8FAFC",
+      muted: "#64748B",
+    },
+  },
+  {
+    id: "teal",
+    name: "松石绿",
+    description: "适合教程、知识整理。",
+    colors: {
+      primary: "#0F766E",
+      accent: "#2DD4BF",
+      dark: "#134E4A",
+      paper: "#F0FDFA",
+      muted: "#5E7C78",
+    },
+  },
+  {
+    id: "filmBrown",
+    name: "胶片棕",
+    description: "适合个人随笔、故事、复盘。",
+    colors: {
+      primary: "#7C4A21",
+      accent: "#D97706",
+      dark: "#2F241D",
+      paper: "#FFFBEB",
+      muted: "#8B735C",
+    },
+  },
+  {
+    id: "violetMist",
+    name: "紫雾",
+    description: "适合 AI、未来感、轻科技内容。",
+    colors: {
+      primary: "#6D28D9",
+      accent: "#A78BFA",
+      dark: "#2E1065",
+      paper: "#FAF5FF",
+      muted: "#7C6A93",
+    },
+  },
+  {
+    id: "warmOrange",
+    name: "暖橙",
+    description: "适合方法论、经验总结、轻知识卡片。",
+    colors: {
+      primary: "#9A3412",
+      accent: "#F97316",
+      dark: "#292524",
+      paper: "#FFF7ED",
+      muted: "#78716C",
+    },
+  },
+];
+
+export function getDefaultColorsForLayout(layoutId: LayoutThemeId): ThemeColors {
+  const layout =
+    LAYOUT_THEMES.find((t) => t.id === layoutId) ??
+    LAYOUT_THEMES.find((t) => t.id === DEFAULT_THEME_ID) ??
+    LAYOUT_THEMES[0];
+  return layout.defaultColors;
+}
+
+export function normalizeStoredPaletteId(raw: string | null): ColorPaletteId {
+  if (raw === null || raw === "") return "default";
+  const found = PALETTES.some((p) => p.id === raw);
+  return (found ? raw : "default") as ColorPaletteId;
+}
+
+export function resolvePaletteColors(
+  layoutId: LayoutThemeId,
+  paletteId: ColorPaletteId,
+): ThemeColors {
+  if (paletteId === "default") return getDefaultColorsForLayout(layoutId);
+  const palette = PALETTES.find((p) => p.id === paletteId);
+  return palette?.colors ?? getDefaultColorsForLayout(layoutId);
+}
+

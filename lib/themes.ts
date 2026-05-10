@@ -1,16 +1,16 @@
-import type { Theme, ThemeColors, ThemeId } from "@/types/theme";
+import type { LayoutTheme, LayoutThemeId, Theme, ThemeColors } from "@/types/theme";
 
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
 
 function minimalStyles(c: ThemeColors): Theme["styles"] {
-  const { dark, paper, muted } = c;
+  const { dark, muted } = c;
 
   return {
     section: {
       margin: "0",
       padding: "0",
-      backgroundColor: paper,
+      backgroundColor: "#ffffff",
       color: dark,
       borderRadius: "0",
       border: "none",
@@ -122,7 +122,7 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
       color: dark,
     },
     tbody: {
-      backgroundColor: paper,
+      backgroundColor: "#ffffff",
     },
     tr: {
       borderBottom: "1px solid #E5E7EB",
@@ -152,13 +152,13 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
 }
 
 function starshipStyles(c: ThemeColors): Theme["styles"] {
-  const { primary, accent, dark, paper, muted } = c;
+  const { primary, accent, dark, muted } = c;
 
   return {
     section: {
       margin: "0",
       padding: "0",
-      backgroundColor: paper,
+      backgroundColor: "#ffffff",
       color: dark,
       borderRadius: "0",
       border: "none",
@@ -320,33 +320,41 @@ const STARSHIP_COLORS: ThemeColors = {
   muted: "#64748B",
 };
 
-export const minimal: Theme = {
-  id: "minimal",
-  name: "极简长文",
-  colors: MINIMAL_COLORS,
-  styles: minimalStyles(MINIMAL_COLORS),
-};
+export const LAYOUT_THEMES: LayoutTheme[] = [
+  {
+    id: "minimal",
+    name: "极简长文",
+    defaultColors: MINIMAL_COLORS,
+    createStyles: minimalStyles,
+  },
+  {
+    id: "starship",
+    name: "星舰科技",
+    defaultColors: STARSHIP_COLORS,
+    createStyles: starshipStyles,
+  },
+];
 
-export const starship: Theme = {
-  id: "starship",
-  name: "星舰科技",
-  colors: STARSHIP_COLORS,
-  styles: starshipStyles(STARSHIP_COLORS),
-};
+export function createTheme(
+  layoutId: LayoutThemeId,
+  colors?: ThemeColors,
+): Theme {
+  const layout =
+    LAYOUT_THEMES.find((t) => t.id === layoutId) ?? LAYOUT_THEMES[0];
+  const finalColors = colors ?? layout.defaultColors;
+  return {
+    id: layout.id,
+    name: layout.name,
+    colors: finalColors,
+    styles: layout.createStyles(finalColors),
+  };
+}
+
+export const minimal = createTheme("minimal");
+
+export const starship = createTheme("starship");
 
 export const THEMES: Theme[] = [minimal, starship];
-
-/** Old localStorage / bookmarks may still use these keys. */
-const LEGACY_THEME_ID_MAP: Record<string, ThemeId> = {
-  warmCard: "starship",
-};
-
-export function normalizeStoredThemeId(raw: string | null): ThemeId | null {
-  if (raw === null || raw === "") return null;
-  const candidate = LEGACY_THEME_ID_MAP[raw] ?? raw;
-  const theme = THEMES.find((t) => t.id === candidate);
-  return theme ? theme.id : null;
-}
 
 export const DEFAULT_THEME_ID = "minimal" as const;
 

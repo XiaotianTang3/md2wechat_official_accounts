@@ -14,7 +14,7 @@ export function PreviewPane({
   return (
     <div className="flex w-1/2 min-h-0 flex-col p-4">
       <div
-        className="preview-shell relative min-h-0 flex-1 overflow-auto rounded border border-zinc-300 p-4 text-zinc-900"
+        className="preview-shell relative min-h-0 flex-1 overflow-auto rounded border border-zinc-300 bg-white p-4 text-zinc-900 shadow-sm"
         style={
           shellBackground
             ? { backgroundColor: shellBackground }

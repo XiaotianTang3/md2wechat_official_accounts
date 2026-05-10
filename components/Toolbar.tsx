@@ -1,4 +1,6 @@
 import type { Theme } from "@/types/theme";
+import type { ColorPaletteId, ThemeColors } from "@/types/theme";
+import { PaletteSelector } from "@/components/PaletteSelector";
 import { ThemeSelector } from "@/components/ThemeSelector";
 
 const btnSecondary =
@@ -8,6 +10,9 @@ type ToolbarProps = {
   themes: Theme[];
   themeId: string;
   onThemeIdChange: (id: string) => void;
+  paletteId: ColorPaletteId;
+  onPaletteIdChange: (id: ColorPaletteId) => void;
+  paletteSwatchColors: ThemeColors;
   primaryAccentColor: string;
   onImportMarkdown: () => void;
   onExportMarkdown: () => void;
@@ -22,6 +27,9 @@ export function Toolbar({
   themes,
   themeId,
   onThemeIdChange,
+  paletteId,
+  onPaletteIdChange,
+  paletteSwatchColors,
   primaryAccentColor,
   onImportMarkdown,
   onExportMarkdown,
@@ -34,11 +42,16 @@ export function Toolbar({
   return (
     <header className="flex shrink-0 flex-wrap items-center gap-2 border-b border-zinc-200 bg-white px-4 py-2 sm:gap-3">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-600">主题</span>
+        <span className="text-sm text-zinc-600">排版</span>
         <ThemeSelector
           themes={themes}
           value={themeId}
           onChange={onThemeIdChange}
+        />
+        <PaletteSelector
+          value={paletteId}
+          onChange={onPaletteIdChange}
+          currentSwatchColors={paletteSwatchColors}
         />
       </div>
 
