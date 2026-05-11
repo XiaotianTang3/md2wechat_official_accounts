@@ -6,6 +6,20 @@ import { ThemeSelector } from "@/components/ThemeSelector";
 const btnSecondary =
   "rounded border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50";
 
+const btnPrimary =
+  "rounded px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50";
+
+const groupLabel = "text-xs font-medium text-zinc-500";
+
+function Divider() {
+  return (
+    <span
+      aria-hidden
+      className="hidden h-5 w-px shrink-0 bg-zinc-200 sm:inline-block"
+    />
+  );
+}
+
 type ToolbarProps = {
   themes: Theme[];
   themeId: string;
@@ -13,12 +27,11 @@ type ToolbarProps = {
   paletteId: ColorPaletteId;
   onPaletteIdChange: (id: ColorPaletteId) => void;
   paletteSwatchColors: ThemeColors;
+  paletteDefaultSwatchColors: ThemeColors;
   primaryAccentColor: string;
   onImportMarkdown: () => void;
   onExportMarkdown: () => void;
-  onExportHtml: () => void;
   onCopyWechat: () => void;
-  onCopyMarkdown: () => void;
   copyWechatDisabled?: boolean;
   copyHint: string | null;
 };
@@ -30,30 +43,37 @@ export function Toolbar({
   paletteId,
   onPaletteIdChange,
   paletteSwatchColors,
+  paletteDefaultSwatchColors,
   primaryAccentColor,
   onImportMarkdown,
   onExportMarkdown,
-  onExportHtml,
   onCopyWechat,
-  onCopyMarkdown,
   copyWechatDisabled,
   copyHint,
 }: ToolbarProps) {
   return (
-    <header className="flex shrink-0 flex-wrap items-center gap-2 border-b border-zinc-200 bg-white px-4 py-2 sm:gap-3">
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-600">排版</span>
-        <ThemeSelector
-          themes={themes}
-          value={themeId}
-          onChange={onThemeIdChange}
-        />
-        <PaletteSelector
-          value={paletteId}
-          onChange={onPaletteIdChange}
-          currentSwatchColors={paletteSwatchColors}
-        />
+    <header className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-zinc-200 bg-white px-4 py-2 sm:gap-x-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <div className="flex items-center gap-2">
+          <span className={groupLabel}>排版</span>
+          <ThemeSelector
+            themes={themes}
+            value={themeId}
+            onChange={onThemeIdChange}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={groupLabel}>配色</span>
+          <PaletteSelector
+            value={paletteId}
+            onChange={onPaletteIdChange}
+            currentSwatchColors={paletteSwatchColors}
+            defaultSwatchColors={paletteDefaultSwatchColors}
+          />
+        </div>
       </div>
+
+      <Divider />
 
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" className={btnSecondary} onClick={onImportMarkdown}>
@@ -61,9 +81,6 @@ export function Toolbar({
         </button>
         <button type="button" className={btnSecondary} onClick={onExportMarkdown}>
           导出 Markdown
-        </button>
-        <button type="button" className={btnSecondary} onClick={onExportHtml}>
-          导出 HTML
         </button>
       </div>
 
@@ -75,19 +92,12 @@ export function Toolbar({
         ) : null}
         <button
           type="button"
-          className="rounded border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 disabled:opacity-50"
+          className={btnPrimary}
+          style={{ backgroundColor: primaryAccentColor }}
           disabled={copyWechatDisabled}
           onClick={onCopyWechat}
         >
           复制到公众号
-        </button>
-        <button
-          type="button"
-          className="rounded px-3 py-1.5 text-sm text-white hover:opacity-90"
-          style={{ backgroundColor: primaryAccentColor }}
-          onClick={onCopyMarkdown}
-        >
-          复制 Markdown
         </button>
       </div>
     </header>

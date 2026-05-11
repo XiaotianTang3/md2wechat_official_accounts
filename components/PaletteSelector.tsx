@@ -6,6 +6,7 @@ type PaletteSelectorProps = {
   value: ColorPaletteId;
   onChange: (id: ColorPaletteId) => void;
   currentSwatchColors: ThemeColors;
+  defaultSwatchColors: ThemeColors;
 };
 
 function SwatchDots({ colors }: { colors: ThemeColors }) {
@@ -30,6 +31,7 @@ export function PaletteSelector({
   value,
   onChange,
   currentSwatchColors,
+  defaultSwatchColors,
 }: PaletteSelectorProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -83,7 +85,7 @@ export function PaletteSelector({
             {PALETTES.map((p) => {
               const pressed = p.id === value;
               const swatch =
-                p.id === "default" || !p.colors ? currentSwatchColors : p.colors;
+                p.id === "default" || !p.colors ? defaultSwatchColors : p.colors;
               return (
                 <button
                   key={p.id}

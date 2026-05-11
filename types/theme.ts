@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-export type LayoutThemeId = "minimal" | "starship";
+export type LayoutThemeId = "minimal" | "starship" | "studyDaily" | "xinhua";
 
 export type ColorPaletteId =
   | "default"

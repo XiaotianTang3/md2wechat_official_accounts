@@ -12,11 +12,7 @@ import { EditorPane } from "@/components/EditorPane";
 import { PreviewPane } from "@/components/PreviewPane";
 import { Toolbar } from "@/components/Toolbar";
 import { copyRichHtml } from "@/lib/clipboard";
-import {
-  exportHtmlDocument,
-  exportMarkdownFile,
-  readFileAsText,
-} from "@/lib/file";
+import { exportMarkdownFile, readFileAsText } from "@/lib/file";
 import { applyInlineStyles } from "@/lib/inlineStyles";
 import { markdownToHtml } from "@/lib/markdown";
 import { SAMPLE_MARKDOWN } from "@/lib/sample-markdown";
@@ -28,7 +24,11 @@ import {
   savePaletteId,
   saveThemeId,
 } from "@/lib/storage";
-import { resolvePaletteColors, normalizeStoredPaletteId } from "@/lib/palettes";
+import {
+  getDefaultColorsForLayout,
+  normalizeStoredPaletteId,
+  resolvePaletteColors,
+} from "@/lib/palettes";
 import { createTheme, DEFAULT_THEME_ID, THEMES } from "@/lib/themes";
 import type { ColorPaletteId, LayoutThemeId } from "@/types/theme";
 
@@ -108,15 +108,6 @@ export default function Home() {
     }
   }
 
-  async function handleCopyMarkdown() {
-    try {
-      await navigator.clipboard.writeText(markdown);
-      showCopyHint("已复制");
-    } catch {
-      showCopyHint("复制失败");
-    }
-  }
-
   function handleImportMarkdownClick() {
     importInputRef.current?.click();
   }
@@ -136,16 +127,6 @@ export default function Home() {
 
   function handleExportMarkdown() {
     exportMarkdownFile(markdown);
-    showCopyHint("已导出");
-  }
-
-  function handleExportHtml() {
-    const sectionStyle =
-      "max-width:720px;margin:0 auto;padding:24px;box-sizing:border-box;background-color:#ffffff;";
-    exportHtmlDocument(html, {
-      title: "Wechat Article",
-      sectionStyle,
-    });
     showCopyHint("已导出");
   }
 
@@ -177,12 +158,11 @@ export default function Home() {
         paletteId={paletteId}
         onPaletteIdChange={setPaletteId}
         paletteSwatchColors={resolvePaletteColors(layoutId, paletteId)}
+        paletteDefaultSwatchColors={getDefaultColorsForLayout(layoutId)}
         primaryAccentColor={currentTheme.colors.primary}
         onImportMarkdown={handleImportMarkdownClick}
         onExportMarkdown={handleExportMarkdown}
-        onExportHtml={handleExportHtml}
         onCopyWechat={() => void handleCopyWechat()}
-        onCopyMarkdown={() => void handleCopyMarkdown()}
         copyWechatDisabled={copyWechatDisabled}
         copyHint={copyHint}
       />
