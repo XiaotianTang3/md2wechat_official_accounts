@@ -1,5 +1,7 @@
 # md2wechat
 
+[中文](README.zh-CN.md)
+
 **md2wechat** is a local-first Markdown formatter for WeChat Official Account articles.
 
 Write in plain Markdown, preview a WeChat-friendly white-background article layout, then copy rich text with **inline styles** directly into the WeChat Official Account editor.
@@ -7,8 +9,6 @@ Write in plain Markdown, preview a WeChat-friendly white-background article layo
 > Plain Markdown → sanitized HTML → inline styles → paste into WeChat
 
 md2wechat is not a CMS or collaboration platform. By default, it has no backend, no login, and no database. Drafts and UI choices stay in your browser local storage.
-
-[中文](README.zh-CN.md)
 
 ## Screenshots
 

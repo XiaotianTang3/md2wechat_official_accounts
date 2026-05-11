@@ -1,6 +1,6 @@
 # md2wechat
 
-[English](README.md)
+[English](README.md) | **中文**
 
 **md2wechat** 是一个本地优先的 **微信公众号 Markdown 排版工具**。
 
