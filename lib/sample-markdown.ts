@@ -45,7 +45,7 @@ const output = renderToWechatHtml(format);
 
 实际工程里，\`output\` 应是 **已消毒、已内联主题** 的 HTML 字符串，而不是一堆依赖外部 CSS 的 class。
 
-![排版示意占位](https://via.placeholder.com/600x120.png?text=WeChat+Article+Preview)
+![排版示意占位](https://placehold.co/800x320.png?text=md2wechat+image+test)
 
 ---
 

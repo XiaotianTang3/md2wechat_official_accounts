@@ -130,7 +130,8 @@ npm run build
 
 下面是一张远程图片。这个部分主要用于观察 md2wechat 预览是否正常显示，以及复制到公众号后台后图片是否保留。
 
-![远程图片测试](https://via.placeholder.com/800x320.png?text=md2wechat+image+test)
+![远程图片测试](https://placehold.co/800x320.png?text=md2wechat+image+test)
+
 
 > 注意：图片复制到公众号后台很可能不稳定。正式发布时，更可靠的方法通常是在公众号后台自己上传图片，再调整位置。
 
