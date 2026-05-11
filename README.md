@@ -1,6 +1,6 @@
 # md2wechat
 
-[中文](README.zh-CN.md)
+**English** | [中文](README.zh-CN.md)
 
 **md2wechat** is a local-first Markdown formatter for WeChat Official Account articles.
 
