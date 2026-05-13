@@ -1,62 +1,62 @@
 # md2wechat
 
-**English** | [中文](README.zh-CN.md)
+**中文** | [English](README.en.md)
 
-**md2wechat** is a local-first Markdown formatter for WeChat Official Account articles.
+[![CI](https://github.com/XiaotianTang3/md2wechat_official_accounts/actions/workflows/ci.yml/badge.svg)](https://github.com/XiaotianTang3/md2wechat_official_accounts/actions/workflows/ci.yml)
 
-Write in plain Markdown, preview a WeChat-friendly white-background article layout, then copy rich text with **inline styles** directly into the WeChat Official Account editor.
+**md2wechat** 是一个本地优先的 **微信公众号 Markdown 排版工具**。
 
-> Plain Markdown → sanitized HTML → inline styles → paste into WeChat
+用普通 Markdown 写作，实时预览接近微信公众号白底正文的排版效果，然后一键复制带 **inline style** 的富文本到微信公众号后台。
 
-md2wechat is not a CMS or collaboration platform. By default, it has no backend, no login, and no database. Drafts and UI choices stay in your browser local storage.
+> 普通 Markdown → 已消毒 HTML → inline style 排版 → 复制到公众号后台
 
-## Screenshots
+md2wechat 不是 CMS，也不是在线协作平台。默认无后端、无登录、无数据库，内容只保存在你的浏览器本地。
 
-### Editor preview
+## 截图
 
-![md2wechat editor preview](docs/assets/study-daily-default.png)
+### 编辑器预览
 
-### Paste result in WeChat Official Account editor
+![md2wechat 编辑器预览](docs/assets/study-daily-default.png)
 
-![WeChat paste result](docs/assets/wechat-paste-result.png)
+### 粘贴到微信公众号后台后的效果
 
-### Theme examples
+![微信公众号后台粘贴效果](docs/assets/wechat-paste-result.png)
 
-![Starship theme preview](docs/assets/starship-default.png)
+### 模板示例
 
-![Study Daily warm orange palette preview](docs/assets/study-daily-warm-orange.png)
+![星舰科技模板预览](docs/assets/starship-default.png)
 
-## Why
+![留学日报暖橙配色预览](docs/assets/study-daily-warm-orange.png)
 
-The WeChat Official Account editor is good for publishing, but not great for writing and formatting long structured content.
+## 为什么做这个
 
-Common pain points:
+微信公众号编辑器适合发布，不适合写作和排版。常见问题是：
 
-- Long-form writing and restructuring are awkward in the editor.
-- Markdown content usually needs to be manually restyled before publishing.
-- CSS classes, Tailwind classes, or external styles often disappear after pasting.
-- A web preview may look nice, but the result can break in WeChat's white-background editing environment.
+- 长文写作和结构调整不方便
+- Markdown 内容需要手工重新排版
+- 网页 CSS / Tailwind class 复制到公众号后经常失效
+- 预览很好看，但粘贴到公众号白底环境后效果变样
 
-md2wechat keeps Markdown as the writing format, then maps it into WeChat-friendly rich text with inline styles.
+md2wechat 的目标是把写作和排版前移到一个轻量工具里：用标准 Markdown 写内容，用排版模板生成适合公众号粘贴的 inline style 富文本。
 
-## Features
+## 功能
 
-- Markdown editing with live preview
-- GFM support, including tables and task lists
-- Copy rich text to the WeChat Official Account editor
-- Import / export `.md` files
-- Autosave draft, layout theme, and palette in browser `localStorage`
-- Multiple article layout themes
-- Multiple color palettes
-- White-background-first preview designed for WeChat readability
+- Markdown 编辑与实时预览
+- GFM 支持：表格、任务列表等
+- 一键复制富文本到微信公众号后台
+- 导入 / 导出 `.md`
+- 自动保存草稿、排版和配色到浏览器 `localStorage`
+- 多种公众号文章排版模板
+- 多套配色方案
+- 白底优先的预览策略，减少「网页卡片好看、公众号里变样」的问题
 
-## Quick Start
+## 快速开始
 
-Requirements:
+要求：
 
 - Node.js 20+
 - npm
-- A modern browser, preferably Chrome or Edge
+- 现代浏览器，推荐 Chrome / Edge
 
 ```bash
 git clone https://github.com/XiaotianTang3/md2wechat_official_accounts.git
@@ -65,172 +65,172 @@ npm install
 npm run dev
 ```
 
-Open:
+打开：
 
 ```txt
 http://localhost:3000
 ```
 
-Production build:
+生产构建：
 
 ```bash
 npm run build
 npm run start
 ```
 
-Lint:
+代码检查：
 
 ```bash
 npm run lint
 ```
 
-## Usage
+## 使用方式
 
-1. Write Markdown on the left, or import a `.md` file.
-2. Choose a layout theme from the toolbar.
-3. Choose a color palette, or keep `Default`.
-4. Check the WeChat-style article preview on the right.
-5. Click `Copy to WeChat`.
-6. Paste into the WeChat Official Account editor.
-7. Use WeChat's own preview before publishing.
+1. 在左侧写 Markdown，或导入 `.md` 文件
+2. 在工具栏选择「排版」模板
+3. 选择「配色」方案，或保留「默认」
+4. 在右侧检查公众号正文预览
+5. 点击「复制到公众号」
+6. 粘贴到微信公众号后台
+7. 用微信公众号自己的预览做最终确认
 
-## Layout Themes
+## 排版模板
 
-The `Layout` control changes the article structure and typography.
+工具栏中的「排版」控制文章结构和版式。当前内置：
 
-Built-in themes:
+- **极简长文**：克制、正文优先，适合长文、随笔、方法论文章。
+- **星舰科技**：标题和强调更明确，适合 AI、科技产品分析、结构化内容。
+- **留学日报**：黄色高亮分节，适合留学、教育、职场和热点评论类公众号长文。
+- **仿新华社**：蓝色小标题、红色重点强调，适合新闻稿、官方资讯和正式媒体报道。
 
-- **Minimal Longform**: restrained, body-first, suitable for essays, notes, and methodology posts.
-- **Starship Tech**: stronger headings and highlights, suitable for AI, tech, and product analysis.
-- **Study Daily**: yellow section highlights, suitable for education, study-abroad, career, and commentary posts.
-- **Xinhua-inspired**: blue section headings with red emphasis, suitable for news-like or formal information posts.
+排版模板控制的是字号、行距、标题、引用、表格、代码块等结构样式。
 
-Themes control structural styling such as font size, line height, headings, blockquotes, tables, and code blocks.
+## 配色方案
 
-## Color Palettes
+工具栏中的「配色」控制标题、强调色、引用、表格、代码块等局部元素的颜色。
 
-The `Palette` control changes local accent colors for headings, emphasis, blockquotes, tables, and code blocks.
+当前内置：
 
-Built-in palettes:
+- **默认**：使用当前排版模板自己的原生配色
+- **墨黑灰**：正式、克制，适合长文
+- **星空蓝**：科技、AI、产品分析
+- **松石绿**：教程、知识整理
+- **胶片棕**：个人随笔、故事、复盘
+- **紫雾**：轻科技、未来感内容
+- **暖橙**：方法论、经验总结、轻知识卡片
 
-- **Default**: use the current layout theme's native colors
-- **Ink Gray**: formal and restrained
-- **Starry Blue**: tech, AI, and product analysis
-- **Turquoise Green**: tutorials and knowledge notes
-- **Film Brown**: personal essays, stories, and retrospectives
-- **Purple Mist**: light tech and futuristic content
-- **Warm Orange**: methodology, experience sharing, and lightweight knowledge posts
+「默认」不是全局固定色，而是当前模板的原生配色。例如「留学日报」默认是黄标风格，「仿新华社」默认是蓝红撞色。选择其它配色时，会用对应 palette 覆盖模板配色。
 
-`Default` is not a global fixed palette. It means “use the native colors of the current layout theme.” Choosing another palette overrides the theme colors.
+## 支持的 Markdown
 
-## Supported Markdown
+md2wechat 使用 unified / remark / rehype 渲染 Markdown，并支持常见 GFM 内容：
 
-md2wechat uses unified / remark / rehype to render Markdown and supports common GFM content:
+- 标题：`#` / `##` / `###`
+- 段落与换行
+- 加粗、斜体、链接、inline code
+- 引用块
+- 无序 / 有序列表
+- 任务列表
+- 表格
+- 代码块
+- 分割线
+- 图片
 
-- Headings: `#` / `##` / `###`
-- Paragraphs and line breaks
-- Bold, italic, links, inline code
-- Blockquotes
-- Ordered and unordered lists
-- Task lists
-- Tables
-- Code blocks
-- Horizontal rules
-- Images
-
-A manual validation sample is included at:
+项目里有一份人工验证样稿：
 
 ```txt
 docs/validation-markdown-sample.md
 ```
 
-Use it to test previews, WeChat paste fidelity, and mobile preview behavior across different themes and palettes.
+可以导入它测试不同模板和配色在预览、公众号后台粘贴、公众号手机预览里的表现。详细步骤见 [docs/manual-validation-checklist.md](docs/manual-validation-checklist.md)。
 
-## Copying to WeChat
+## 复制到公众号
 
-`Copy to WeChat` copies inline-styled HTML with a plain-text fallback.
+点击「复制到公众号」会复制经过 inline style 处理的 HTML，同时附带纯文本 fallback。
 
-Design principles:
+设计原则：
 
-- Do not depend on external CSS.
-- Do not copy Tailwind classes into article content.
-- Do not force a full-page background color.
-- Prioritize readability in WeChat's default white editor environment.
-- Preserve local styles for tables, blockquotes, and code blocks as much as possible.
+- 不依赖外部 CSS
+- 不把 Tailwind class 写进正文
+- 不强行复制整页背景色
+- 优先保证在公众号默认白底下清晰可读
+- 表格、引用、代码块等局部样式尽量保留
 
-Different browsers and WeChat editor versions may handle rich-text paste differently. Always verify the final result in WeChat before publishing.
+不同浏览器和微信公众号编辑器版本对富文本粘贴的支持可能有差异，最终效果以实际粘贴结果为准。建议在微信公众号后台粘贴后，再用公众号自己的预览做最终检查。
 
-## Image Handling
+## 图片边界
 
-md2wechat renders Markdown images. Remote images may paste into WeChat in some cases, for example:
+md2wechat 会渲染 Markdown 图片。远程图片在部分情况下可以随富文本一起粘贴到微信公众号后台，例如：
 
 ```md
-![Image alt](https://placehold.co/800x320.png?text=md2wechat+image+test)
+![图片说明](https://placehold.co/800x320.png?text=md2wechat+image+test)
 ```
 
-Images are not a core guarantee in the current version:
+但图片不是当前版本的核心承诺：
 
-- Whether remote images survive paste depends on how WeChat handles external images.
-- Local image paths such as `./assets/demo.png` or `/Users/.../demo.png` usually cannot be used directly by WeChat.
-- For production publishing, the safer workflow is to upload images in the WeChat editor and adjust their positions there.
+- 远程图片能否保留，取决于微信公众号后台对外链图片的处理
+- 本地图片路径（如 `./assets/demo.png` 或 `/Users/.../demo.png`）通常无法被公众号后台直接使用
+- 正式发布时，更可靠的方式是在公众号后台手动上传图片，再调整到对应位置
 
-md2wechat currently focuses on text layout: body copy, headings, blockquotes, tables, and code blocks.
+因此，md2wechat 当前主要负责正文、标题、引用、表格、代码块等文本排版；图片以公众号最终预览为准。
 
-## Privacy
+## 隐私
 
-By default, md2wechat only stores local browser state in `localStorage`:
+md2wechat 默认只使用浏览器 `localStorage` 保存本地状态：
 
-- Draft content
-- Current layout theme
-- Current color palette
+- 草稿内容
+- 当前排版模板
+- 当前配色方案
 
-There is no account system and no server-side upload of your article content. Copying to WeChat happens between your browser and the WeChat editor.
+没有账号系统，不会把文章内容上传到服务器。复制到公众号发生在你的浏览器和微信公众号后台之间。
 
-## How It Works
+## 工作原理
 
-Simplified pipeline:
+简化流程：
 
-1. Markdown is converted into semantic HTML with unified / remark / rehype.
-2. `rehype-sanitize` sanitizes the HTML.
-3. The selected layout theme and color palette are converted into inline styles.
-4. The preview renders the same inline-styled HTML.
-5. The copy action writes `text/html` and `text/plain` to the clipboard.
+1. Markdown 通过 unified / remark / rehype 转成语义 HTML
+2. `rehype-sanitize` 清洗 HTML
+3. 当前排版模板和配色方案被转换成 inline style
+4. 预览区展示同一份 inline style HTML
+5. 点击复制时写入剪贴板的 `text/html` 和 `text/plain`
 
-Tailwind CSS is only used for the app shell. It is not copied into the WeChat article HTML.
+Tailwind CSS 只用于应用外壳 UI，不进入复制给公众号的正文 HTML。
 
-## Limitations
+## 限制
 
-Intentionally out of scope:
+当前刻意不做：
 
-- Custom Markdown DSL
-- Free-form color picker / HEX input
-- Element-level CSS editing
-- Theme marketplace
-- Image upload / CDN / WeChat material library management
-- Backend sync
-- Login and permissions
-- Complex template system
-- Mobile phone mockup preview
+- 自定义 Markdown DSL
+- 自由调色器 / HEX 输入
+- 元素级 CSS 编辑
+- 主题市场
+- 图片上传 / 图床 / 微信素材库管理
+- 后端同步
+- 登录和权限系统
+- 复杂模板系统
+- 手机壳模拟预览
 
-Known limitations:
+已知限制：
 
-- The WeChat editor may sanitize or rewrite some styles.
-- Rich-text clipboard behavior can differ across browsers.
-- Tables, code blocks, and remote images should be manually checked in WeChat.
-- Local images should be uploaded in the WeChat editor.
+- 微信公众号后台可能清洗或改写部分样式
+- 不同浏览器的富文本剪贴板行为可能不同
+- 表格、代码块、远程图片在公众号最终效果中需要人工检查
+- 本地图片建议在公众号后台手动上传
 
-## Development
+这个项目优先保持轻量、直接、可复制到公众号。
 
-Tech stack:
+## 开发
+
+技术栈：
 
 - Next.js App Router
 - React
 - TypeScript
-- Tailwind CSS for app shell UI only
-- unified / remark / rehype for Markdown to HTML
-- rehype-sanitize for HTML sanitization
+- Tailwind CSS：只用于应用外壳 UI
+- unified / remark / rehype：Markdown 转 HTML
+- rehype-sanitize：HTML 安全处理
 
-Common commands:
+常用命令：
 
 ```bash
 npm run dev
@@ -238,19 +238,19 @@ npm run lint
 npm run build
 ```
 
-Layout themes:
+排版模板主要在：
 
 ```txt
 lib/themes.ts
 ```
 
-Color palettes:
+配色方案主要在：
 
 ```txt
 lib/palettes.ts
 ```
 
-Markdown rendering and clipboard pipeline:
+Markdown 渲染和复制链路分别在：
 
 ```txt
 lib/markdown.ts
@@ -258,12 +258,16 @@ lib/inlineStyles.ts
 lib/clipboard.ts
 ```
 
-## Deployment
+## 部署
 
-Deploy to Vercel or any platform that supports Next.js.
+可以部署到 Vercel 或其它支持 Next.js 的平台。
 
-For personal use, running locally is enough. Even when deployed, md2wechat remains a frontend tool by default, with no backend, login, or cloud sync.
+如果只是个人使用，本地运行就够了。部署后它仍然是一个前端工具，默认不包含后端、登录和云端同步。
 
-## License
+## 参与贡献
+
+项目范围、PR 检查清单与人工验证说明见根目录 [CONTRIBUTING.md](CONTRIBUTING.md)。发布前最终核对见 [docs/release-checklist.md](docs/release-checklist.md)。
+
+## 许可证
 
 MIT

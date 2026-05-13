@@ -22,7 +22,14 @@
 
 # misc
 .DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
 *.pem
+
+# eslint
+.eslintcache
 
 # debug
 npm-debug.log*

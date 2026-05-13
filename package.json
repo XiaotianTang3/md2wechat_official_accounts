@@ -2,7 +2,16 @@
   "name": "md2wechat",
   "version": "0.1.0",
   "private": true,
+  "description": "Local-first Markdown formatter for WeChat Official Account articles — preview and copy inline-styled rich text for the WeChat editor.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XiaotianTang3/md2wechat_official_accounts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/XiaotianTang3/md2wechat_official_accounts/issues"
+  },
+  "homepage": "https://github.com/XiaotianTang3/md2wechat_official_accounts#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
