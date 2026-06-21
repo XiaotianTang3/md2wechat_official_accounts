@@ -1,5 +1,6 @@
 import type { ColorPalette, ColorPaletteId, LayoutThemeId, ThemeColors } from "@/types/theme";
 import { DEFAULT_THEME_ID, LAYOUT_THEMES } from "@/lib/themes";
+import { deriveDerivedTokens } from "@/lib/color";
 
 export const PALETTES: ColorPalette[] = [
   { id: "default", name: "默认" },
@@ -18,27 +19,27 @@ export const PALETTES: ColorPalette[] = [
   },
   {
     id: "oatTobacco",
-    name: "燕麦·烟草·酒红",
-    description: "Loro Piana / Bottega 单色。生活方式、文化随笔。",
+    name: "燕麦·烟草·深棕",
+    description: "Loro Piana / Bottega 深烟草。生活方式、文化随笔、深度长文。",
     themes: ["editorial"],
     colors: {
-      primary: "#5A4A38",
-      accent: "#A8855E",
-      dark: "#241E18",
-      paper: "#F4ECDE",
-      muted: "#7E7466",
+      primary: "#5A3A20",
+      accent: "#7C4A21",
+      dark: "#2A1F12",
+      paper: "#F0E5D0",
+      muted: "#6E5040",
     },
   },
   {
     id: "stoneSage",
     name: "石色·鼠尾草·黄铜",
-    description: "Aesop / Margaret Howell。设计、产品、文化深度长文。",
+    description: "Aesop / Margaret Howell。设计、产品、文化深度。",
     themes: ["editorial"],
     colors: {
       primary: "#3D3833",
       accent: "#8E9476",
       dark: "#1C1A17",
-      paper: "#F1ECE3",
+      paper: "#E8E2D5",
       muted: "#7A7468",
     },
   },
@@ -157,8 +158,12 @@ export function resolvePaletteColors(
   layoutId: LayoutThemeId,
   paletteId: ColorPaletteId,
 ): ThemeColors {
-  if (paletteId === "default") return getDefaultColorsForLayout(layoutId);
-  const palette = PALETTES.find((p) => p.id === paletteId);
-  return palette?.colors ?? getDefaultColorsForLayout(layoutId);
+  const base =
+    paletteId === "default"
+      ? getDefaultColorsForLayout(layoutId)
+      : PALETTES.find((p) => p.id === paletteId)?.colors ??
+        getDefaultColorsForLayout(layoutId);
+  // Always populate surface / border so themes can rely on them.
+  return deriveDerivedTokens(base);
 }
 

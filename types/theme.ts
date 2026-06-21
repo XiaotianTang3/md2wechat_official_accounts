@@ -29,6 +29,18 @@ export type ThemeColors = {
   dark: string;
   paper: string;
   muted: string;
+  /**
+   * Soft surface fill (thead / code / blockquote backgrounds).
+   * Derived as `mix(paper, dark, 0.06)` by `resolvePaletteColors` when
+   * absent; themes can rely on it being populated.
+   */
+  surface?: string;
+  /**
+   * Hairline rule (blockquote left border / table cell borders / hr).
+   * Derived as `mix(paper, dark, 0.18)` by `resolvePaletteColors` when
+   * absent; themes can rely on it being populated.
+   */
+  border?: string;
 };
 
 export type Theme = {

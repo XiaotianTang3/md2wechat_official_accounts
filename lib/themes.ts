@@ -1,4 +1,5 @@
 import type { LayoutTheme, LayoutThemeId, Theme, ThemeColors } from "@/types/theme";
+import { mixColor } from "@/lib/color";
 
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
@@ -17,29 +18,10 @@ const serifHeading =
 const sansBody =
   'system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif';
 
-// --- color helpers used by the editorial theme to derive hairline / surface
-// from the active palette's paper + dark tokens. Kept private to this module
-// so existing factories are unaffected. ---
-function parseHex(hex: string): [number, number, number] {
-  const s = hex.replace("#", "");
-  return [
-    parseInt(s.slice(0, 2), 16),
-    parseInt(s.slice(2, 4), 16),
-    parseInt(s.slice(4, 6), 16),
-  ];
-}
-
-function mixColor(a: string, b: string, t: number): string {
-  const pa = parseHex(a);
-  const pb = parseHex(b);
-  const r = Math.round(pa[0] + (pb[0] - pa[0]) * t);
-  const g = Math.round(pa[1] + (pb[1] - pa[1]) * t);
-  const bl = Math.round(pa[2] + (pb[2] - pa[2]) * t);
-  return `rgb(${r}, ${g}, ${bl})`;
-}
-
 function minimalStyles(c: ThemeColors): Theme["styles"] {
   const { dark, muted } = c;
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -79,7 +61,7 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     },
     p: {
       margin: "0 0 24px",
-      color: "rgba(0,0,0,0.9)",
+      color: dark,
       fontSize: "17px",
       lineHeight: 1.6,
       letterSpacing: "0.034em",
@@ -96,9 +78,9 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     blockquote: {
       margin: "4px 0 24px",
       padding: "0 0 0 14px",
-      borderLeft: "3px solid #D1D5DB",
+      borderLeft: `3px solid ${borderColor}`,
       backgroundColor: "transparent",
-      color: "#4B5563",
+      color: muted,
       fontSize: "16px",
       lineHeight: 1.75,
     },
@@ -120,30 +102,29 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
       margin: "0 0 8px",
     },
     a: {
-      color: "#374151",
+      color: dark,
       textDecoration: "underline",
-      textDecorationColor: "#9CA3AF",
-      textUnderlineOffset: "3px",
+      textDecorationColor: muted,
     },
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 24px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -153,24 +134,24 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
       lineHeight: 1.6,
     },
     thead: {
-      backgroundColor: "#F3F4F6",
+      backgroundColor: surface,
       color: dark,
     },
     tbody: {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: "1px solid #E5E7EB",
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 600,
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -181,13 +162,14 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: "1px solid #E5E7EB",
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function starshipStyles(c: ThemeColors): Theme["styles"] {
   const { primary, accent, dark, muted } = c;
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -231,7 +213,7 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
     },
     p: {
       margin: "0 0 20px",
-      color: "#14161A",
+      color: dark,
       fontSize: "15px",
       lineHeight: 1.6,
       letterSpacing: "0.034em",
@@ -313,18 +295,18 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
       backgroundColor: "#FFFFFF",
     },
     tr: {
-      borderBottom: "1px solid #D7E3F0",
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "8px 12px",
       textAlign: "left",
       fontWeight: 700,
-      border: "1px solid #D7E3F0",
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "8px 12px",
-      border: "1px solid #D7E3F0",
-      color: "#14161A",
+      border: `1px solid ${borderColor}`,
+      color: dark,
     },
     img: {
       display: "block",
@@ -334,15 +316,17 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: "1px solid #CBD5E1",
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function studyDailyStyles(c: ThemeColors): Theme["styles"] {
   const { accent, dark, muted } = c;
+  // Soft yellow stays hardcoded — it's part of studyDaily's visual identity.
   const softYellow = "#FFF9D6";
-  const borderGray = "#E5E7EB";
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -435,22 +419,22 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 22px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -467,17 +451,17 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: `1px solid ${borderGray}`,
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 700,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -488,15 +472,15 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: `1px solid ${borderGray}`,
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function xinhuaStyles(c: ThemeColors): Theme["styles"] {
   const { primary, accent, dark, muted } = c;
-  const borderGray = "#E5E7EB";
-  const headerTint = "#E5F0F7";
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -584,22 +568,22 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 20px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -609,24 +593,24 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
       lineHeight: 1.6,
     },
     thead: {
-      backgroundColor: headerTint,
+      backgroundColor: surface,
       color: primary,
     },
     tbody: {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: `1px solid ${borderGray}`,
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 700,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -638,7 +622,7 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "32px 0",
       border: "none",
-      borderTop: `1px solid ${borderGray}`,
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
@@ -681,8 +665,10 @@ const XINHUA_COLORS: ThemeColors = {
 // WeChat paste. Defaults to ivory + ink + brass (Hermès / Chanel editorial).
 function editorialStyles(c: ThemeColors): Theme["styles"] {
   const { accent, dark } = c;
-  const hairline = mixColor(c.paper, c.dark, 0.18); // ~paper -40 L
-  const surface = mixColor(c.paper, c.dark, 0.06); // ~paper -10 L
+  // `resolvePaletteColors` always populates `surface` and `border`; the
+  // fallback here only fires for callers that bypass it (e.g. tests).
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const hairline = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
