@@ -1,12 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ColorPaletteId, ThemeColors } from "@/types/theme";
+import type { ColorPaletteId, LayoutThemeId, ThemeColors } from "@/types/theme";
 import { PALETTES } from "@/lib/palettes";
+
+function paletteAppliesToTheme(
+  themes: LayoutThemeId[] | undefined,
+  layoutId: LayoutThemeId,
+): boolean {
+  if (!themes || themes.length === 0) return true;
+  return themes.includes(layoutId);
+}
 
 type PaletteSelectorProps = {
   value: ColorPaletteId;
   onChange: (id: ColorPaletteId) => void;
   currentSwatchColors: ThemeColors;
   defaultSwatchColors: ThemeColors;
+  layoutId: LayoutThemeId;
 };
 
 function SwatchDots({ colors }: { colors: ThemeColors }) {
@@ -32,9 +41,15 @@ export function PaletteSelector({
   onChange,
   currentSwatchColors,
   defaultSwatchColors,
+  layoutId,
 }: PaletteSelectorProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const visiblePalettes = useMemo(
+    () => PALETTES.filter((p) => paletteAppliesToTheme(p.themes, layoutId)),
+    [layoutId],
+  );
 
   const currentLabel = useMemo(
     () => PALETTES.find((p) => p.id === value)?.name ?? "默认",
@@ -82,7 +97,7 @@ export function PaletteSelector({
             配色风格
           </div>
           <div className="flex flex-col">
-            {PALETTES.map((p) => {
+            {visiblePalettes.map((p) => {
               const pressed = p.id === value;
               const swatch =
                 p.id === "default" || !p.colors ? defaultSwatchColors : p.colors;

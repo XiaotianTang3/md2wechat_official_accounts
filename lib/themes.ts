@@ -3,6 +3,27 @@ import type { LayoutTheme, LayoutThemeId, Theme, ThemeColors } from "@/types/the
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
 
+// --- color helpers used by the editorial theme to derive hairline / surface
+// from the active palette's paper + dark tokens. Kept private to this module
+// so existing factories are unaffected. ---
+function parseHex(hex: string): [number, number, number] {
+  const s = hex.replace("#", "");
+  return [
+    parseInt(s.slice(0, 2), 16),
+    parseInt(s.slice(2, 4), 16),
+    parseInt(s.slice(4, 6), 16),
+  ];
+}
+
+function mixColor(a: string, b: string, t: number): string {
+  const pa = parseHex(a);
+  const pb = parseHex(b);
+  const r = Math.round(pa[0] + (pb[0] - pa[0]) * t);
+  const g = Math.round(pa[1] + (pb[1] - pa[1]) * t);
+  const bl = Math.round(pa[2] + (pb[2] - pa[2]) * t);
+  return `rgb(${r}, ${g}, ${bl})`;
+}
+
 function minimalStyles(c: ThemeColors): Theme["styles"] {
   const { dark, muted } = c;
 
@@ -640,6 +661,171 @@ const XINHUA_COLORS: ThemeColors = {
   muted: "#888888",
 };
 
+// --- editorial (报刊) — premium / printed-newspaper feel ---
+// Warm off-white paper, warm near-black ink, hairline rules, single
+// restrained accent. Designed to read well on phone screens and survive
+// WeChat paste. Defaults to ivory + ink + brass (Hermès / Chanel editorial).
+function editorialStyles(c: ThemeColors): Theme["styles"] {
+  const { accent, dark } = c;
+  const hairline = mixColor(c.paper, c.dark, 0.18); // ~paper -40 L
+  const surface = mixColor(c.paper, c.dark, 0.06); // ~paper -10 L
+
+  return {
+    section: {
+      margin: "0",
+      padding: "0",
+      backgroundColor: c.paper,
+      color: dark,
+      borderRadius: "0",
+      border: "none",
+      boxShadow: "none",
+    },
+    h1: {
+      margin: "0 0 24px",
+      padding: "0 0 12px",
+      color: dark,
+      fontSize: "24px",
+      fontWeight: 600,
+      lineHeight: 1.3,
+      letterSpacing: "0.02em",
+      borderBottom: `1px solid ${hairline}`,
+    },
+    h2: {
+      margin: "36px 0 14px",
+      padding: "0 0 6px",
+      color: dark,
+      fontSize: "19px",
+      fontWeight: 600,
+      lineHeight: 1.5,
+      letterSpacing: "0.01em",
+      borderBottom: `1px solid ${hairline}`,
+    },
+    h3: {
+      margin: "28px 0 12px",
+      padding: "0",
+      color: dark,
+      fontSize: "17px",
+      fontWeight: 600,
+      lineHeight: 1.5,
+    },
+    p: {
+      margin: "0 0 24px",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+      letterSpacing: "0.02em",
+      textAlign: "left",
+    },
+    strong: {
+      color: dark,
+      fontWeight: 600,
+    },
+    em: {
+      color: c.muted,
+      fontStyle: "italic",
+    },
+    blockquote: {
+      margin: "8px 0 24px",
+      padding: "4px 0 4px 16px",
+      borderLeft: `3px solid ${hairline}`,
+      backgroundColor: "transparent",
+      color: dark,
+      fontSize: "16px",
+      lineHeight: 1.85,
+      fontStyle: "italic",
+    },
+    ul: {
+      margin: "0 0 24px",
+      paddingLeft: "1.35em",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+    },
+    ol: {
+      margin: "0 0 24px",
+      paddingLeft: "1.35em",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+    },
+    li: {
+      margin: "0 0 8px",
+    },
+    a: {
+      color: accent,
+      textDecoration: "underline",
+      textDecorationColor: hairline,
+      textUnderlineOffset: "3px",
+    },
+    code: {
+      fontFamily: mono,
+      fontSize: "0.9em",
+      backgroundColor: surface,
+      color: dark,
+      padding: "0.12em 0.35em",
+      borderRadius: "3px",
+    },
+    pre: {
+      margin: "0 0 24px",
+      padding: "14px 16px",
+      backgroundColor: surface,
+      color: dark,
+      fontSize: "14px",
+      lineHeight: 1.7,
+      borderRadius: "4px",
+      overflowX: "auto",
+      fontFamily: mono,
+      border: `1px solid ${hairline}`,
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      margin: "8px 0 24px",
+      fontSize: "15px",
+      lineHeight: 1.7,
+    },
+    thead: {
+      backgroundColor: surface,
+      color: dark,
+    },
+    tbody: {
+      backgroundColor: "transparent",
+    },
+    tr: {
+      borderBottom: `1px solid ${hairline}`,
+    },
+    th: {
+      padding: "9px 10px",
+      textAlign: "left",
+      fontWeight: 600,
+      border: `1px solid ${hairline}`,
+    },
+    td: {
+      padding: "9px 10px",
+      border: `1px solid ${hairline}`,
+      color: dark,
+    },
+    img: {
+      display: "block",
+      margin: "8px 0 24px",
+      borderRadius: "2px",
+    },
+    hr: {
+      margin: "40px 0",
+      border: "none",
+      borderTop: `1px solid ${hairline}`,
+    },
+  };
+}
+
+const EDITORIAL_COLORS: ThemeColors = {
+  primary: "#4A4239", // graphite body
+  accent: "#A8895E", // brushed brass
+  dark: "#1F1A14", // warm near-black ink
+  paper: "#F6F1E8", // warm ivory
+  muted: "#8A7E6A", // taupe meta
+};
+
 export const LAYOUT_THEMES: LayoutTheme[] = [
   {
     id: "minimal",
@@ -664,6 +850,12 @@ export const LAYOUT_THEMES: LayoutTheme[] = [
     name: "仿新华社",
     defaultColors: XINHUA_COLORS,
     createStyles: xinhuaStyles,
+  },
+  {
+    id: "editorial",
+    name: "报刊",
+    defaultColors: EDITORIAL_COLORS,
+    createStyles: editorialStyles,
   },
 ];
 
@@ -690,7 +882,9 @@ export const studyDaily = createTheme("studyDaily");
 
 export const xinhua = createTheme("xinhua");
 
-export const THEMES: Theme[] = [minimal, starship, studyDaily, xinhua];
+export const editorial = createTheme("editorial");
+
+export const THEMES: Theme[] = [minimal, starship, studyDaily, xinhua, editorial];
 
 export const DEFAULT_THEME_ID = "minimal" as const;
 

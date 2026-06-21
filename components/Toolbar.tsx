@@ -69,6 +69,7 @@ export function Toolbar({
             onChange={onPaletteIdChange}
             currentSwatchColors={paletteSwatchColors}
             defaultSwatchColors={paletteDefaultSwatchColors}
+            layoutId={themeId as import("@/types/theme").LayoutThemeId}
           />
         </div>
       </div>

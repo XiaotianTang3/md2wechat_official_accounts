@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 
-export type LayoutThemeId = "minimal" | "starship" | "studyDaily" | "xinhua";
+export type LayoutThemeId =
+  | "minimal"
+  | "starship"
+  | "studyDaily"
+  | "xinhua"
+  | "editorial";
 
 export type ColorPaletteId =
   | "default"
@@ -9,7 +14,11 @@ export type ColorPaletteId =
   | "teal"
   | "filmBrown"
   | "violetMist"
-  | "warmOrange";
+  | "warmOrange"
+  | "ivoryInkBrass"
+  | "oatTobacco"
+  | "stoneSage"
+  | "washiSumi";
 
 // Phase 1: UI still selects a single "theme" (layout).
 export type ThemeId = LayoutThemeId;
@@ -42,4 +51,10 @@ export type ColorPalette = {
   description?: string;
   /** `default` intentionally has no fixed colors. */
   colors?: ThemeColors;
+  /**
+   * Restrict this palette to specific layout themes. Omit / empty = applies
+   * to every theme. Premium palettes are scoped to `editorial` so the
+   * warm-paper / accent-link design only ships where it was meant to live.
+   */
+  themes?: LayoutThemeId[];
 };

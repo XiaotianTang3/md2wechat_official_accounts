@@ -4,6 +4,58 @@ import { DEFAULT_THEME_ID, LAYOUT_THEMES } from "@/lib/themes";
 export const PALETTES: ColorPalette[] = [
   { id: "default", name: "默认" },
   {
+    id: "ivoryInkBrass",
+    name: "象牙·墨黑·黄铜",
+    description: "Hermès / Chanel 编辑。商业、财经、长论。",
+    themes: ["editorial"],
+    colors: {
+      primary: "#4A4239",
+      accent: "#A8895E",
+      dark: "#1F1A14",
+      paper: "#F6F1E8",
+      muted: "#8A7E6A",
+    },
+  },
+  {
+    id: "oatTobacco",
+    name: "燕麦·烟草·酒红",
+    description: "Loro Piana / Bottega 单色。生活方式、文化随笔。",
+    themes: ["editorial"],
+    colors: {
+      primary: "#5A4A38",
+      accent: "#A8855E",
+      dark: "#241E18",
+      paper: "#F4ECDE",
+      muted: "#7E7466",
+    },
+  },
+  {
+    id: "stoneSage",
+    name: "石色·鼠尾草·黄铜",
+    description: "Aesop / Margaret Howell。设计、产品、文化深度长文。",
+    themes: ["editorial"],
+    colors: {
+      primary: "#3D3833",
+      accent: "#8E9476",
+      dark: "#1C1A17",
+      paper: "#F1ECE3",
+      muted: "#7A7468",
+    },
+  },
+  {
+    id: "washiSumi",
+    name: "和纸·墨·朱赤",
+    description: "The Row / Hato Press 极简。文学、艺术、设计批评。",
+    themes: ["editorial"],
+    colors: {
+      primary: "#3D362F",
+      accent: "#A83A2A",
+      dark: "#1A1714",
+      paper: "#F4EFE5",
+      muted: "#8A7E70",
+    },
+  },
+  {
     id: "inkGray",
     name: "墨黑灰",
     description: "适合正式长文。",
@@ -89,6 +141,16 @@ export function normalizeStoredPaletteId(raw: string | null): ColorPaletteId {
   if (raw === null || raw === "") return "default";
   const found = PALETTES.some((p) => p.id === raw);
   return (found ? raw : "default") as ColorPaletteId;
+}
+
+export function isPaletteValidForLayout(
+  paletteId: ColorPaletteId,
+  layoutId: LayoutThemeId,
+): boolean {
+  if (paletteId === "default") return true;
+  const palette = PALETTES.find((p) => p.id === paletteId);
+  if (!palette || !palette.themes || palette.themes.length === 0) return true;
+  return palette.themes.includes(layoutId);
 }
 
 export function resolvePaletteColors(

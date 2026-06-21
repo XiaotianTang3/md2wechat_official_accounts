@@ -26,6 +26,7 @@ import {
 } from "@/lib/storage";
 import {
   getDefaultColorsForLayout,
+  isPaletteValidForLayout,
   normalizeStoredPaletteId,
   resolvePaletteColors,
 } from "@/lib/palettes";
@@ -67,7 +68,13 @@ export default function Home() {
     const initialLayoutId =
       tid !== null && isThemeId(tid) ? tid : DEFAULT_THEME_ID;
     setLayoutId(initialLayoutId);
-    setPaletteId(normalizeStoredPaletteId(pid));
+    const initialPaletteId = isPaletteValidForLayout(
+      normalizeStoredPaletteId(pid),
+      initialLayoutId,
+    )
+      ? normalizeStoredPaletteId(pid)
+      : "default";
+    setPaletteId(initialPaletteId);
     setStorageReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -79,6 +86,9 @@ export default function Home() {
     savePaletteId(paletteId);
   }, [markdown, layoutId, paletteId, storageReady]);
 
+  // Premium palettes (e.g. editorial-only) must not survive a theme switch.
+  // Done in the change handler (not an effect) to avoid cascading renders.
+
   useEffect(() => {
     const id = ++requestId.current;
     void markdownToHtml(markdown).then((raw) => {
@@ -89,6 +99,14 @@ export default function Home() {
       });
     });
   }, [markdown, currentTheme]);
+
+  function handleThemeIdChange(id: string) {
+    if (!isThemeId(id)) return;
+    setLayoutId(id);
+    if (!isPaletteValidForLayout(paletteId, id)) {
+      setPaletteId("default");
+    }
+  }
 
   function showCopyHint(message: string) {
     if (hintTimer.current) clearTimeout(hintTimer.current);
@@ -152,9 +170,7 @@ export default function Home() {
       <Toolbar
         themes={THEMES}
         themeId={layoutId}
-        onThemeIdChange={(id) => {
-          if (isThemeId(id)) setLayoutId(id);
-        }}
+        onThemeIdChange={handleThemeIdChange}
         paletteId={paletteId}
         onPaletteIdChange={setPaletteId}
         paletteSwatchColors={resolvePaletteColors(layoutId, paletteId)}
