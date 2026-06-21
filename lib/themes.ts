@@ -3,6 +3,20 @@ import type { LayoutTheme, LayoutThemeId, Theme, ThemeColors } from "@/types/the
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
 
+// Heading serif stack — all system Chinese serif fonts so the stack resolves
+// on every WeChat reader's device (macOS / Windows / iOS / Android).
+// WeChat preserves font-family in inline styles per wenyan-core / mdnice
+// production evidence; the OS will substitute if Source Han Serif isn't
+// installed, falling back to Songti SC / SimSun / 宋体 (still serif).
+const serifHeading =
+  '"Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "STSongti-SC-Regular", "SimSun", "宋体", serif';
+
+// Body sans stack — system Chinese sans so body text stays readable on
+// phones. The WeChat editor's default is PingFang SC / 微软雅黑 / Hiragino
+// Sans GB depending on platform; this stack matches.
+const sansBody =
+  'system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif';
+
 // --- color helpers used by the editorial theme to derive hairline / surface
 // from the active palette's paper + dark tokens. Kept private to this module
 // so existing factories are unaffected. ---
@@ -676,37 +690,42 @@ function editorialStyles(c: ThemeColors): Theme["styles"] {
       padding: "0",
       backgroundColor: c.paper,
       color: dark,
+      fontFamily: sansBody,
       borderRadius: "0",
       border: "none",
       boxShadow: "none",
     },
     h1: {
-      margin: "0 0 24px",
-      padding: "0 0 12px",
+      margin: "0 0 32px",
+      padding: "0 0 14px",
       color: dark,
-      fontSize: "24px",
-      fontWeight: 600,
-      lineHeight: 1.3,
-      letterSpacing: "0.02em",
-      borderBottom: `1px solid ${hairline}`,
+      fontFamily: serifHeading,
+      fontSize: "32px",
+      fontWeight: 700,
+      lineHeight: 1.2,
+      letterSpacing: "0.08em",
+      borderBottom: `2px solid ${hairline}`,
     },
     h2: {
-      margin: "36px 0 14px",
-      padding: "0 0 6px",
+      margin: "48px 0 16px",
+      padding: "0 0 8px",
       color: dark,
-      fontSize: "19px",
-      fontWeight: 600,
-      lineHeight: 1.5,
-      letterSpacing: "0.01em",
-      borderBottom: `1px solid ${hairline}`,
+      fontFamily: serifHeading,
+      fontSize: "22px",
+      fontWeight: 700,
+      lineHeight: 1.4,
+      letterSpacing: "0.04em",
+      borderBottom: `3px solid ${accent}`,
     },
     h3: {
-      margin: "28px 0 12px",
+      margin: "32px 0 14px",
       padding: "0",
       color: dark,
-      fontSize: "17px",
-      fontWeight: 600,
-      lineHeight: 1.5,
+      fontFamily: serifHeading,
+      fontSize: "19px",
+      fontWeight: 700,
+      lineHeight: 1.4,
+      letterSpacing: "0.02em",
     },
     p: {
       margin: "0 0 24px",
@@ -717,22 +736,25 @@ function editorialStyles(c: ThemeColors): Theme["styles"] {
       textAlign: "left",
     },
     strong: {
-      color: dark,
-      fontWeight: 600,
+      color: accent,
+      fontWeight: 700,
     },
     em: {
       color: c.muted,
       fontStyle: "italic",
+      letterSpacing: "0.04em",
     },
     blockquote: {
-      margin: "8px 0 24px",
-      padding: "4px 0 4px 16px",
-      borderLeft: `3px solid ${hairline}`,
+      margin: "8px 0 28px",
+      padding: "12px 0 12px 20px",
+      borderLeft: `3px solid ${accent}`,
       backgroundColor: "transparent",
       color: dark,
+      fontFamily: serifHeading,
       fontSize: "16px",
       lineHeight: 1.85,
       fontStyle: "italic",
+      letterSpacing: "0.03em",
     },
     ul: {
       margin: "0 0 24px",
@@ -753,15 +775,13 @@ function editorialStyles(c: ThemeColors): Theme["styles"] {
     },
     a: {
       color: accent,
-      textDecoration: "underline",
-      textDecorationColor: hairline,
-      textUnderlineOffset: "3px",
+      textDecoration: `underline ${hairline}`,
     },
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
       backgroundColor: surface,
-      color: dark,
+      color: accent,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
@@ -786,7 +806,8 @@ function editorialStyles(c: ThemeColors): Theme["styles"] {
     },
     thead: {
       backgroundColor: surface,
-      color: dark,
+      color: accent,
+      borderBottom: `2px solid ${accent}`,
     },
     tbody: {
       backgroundColor: "transparent",
@@ -811,16 +832,16 @@ function editorialStyles(c: ThemeColors): Theme["styles"] {
       borderRadius: "2px",
     },
     hr: {
-      margin: "40px 0",
+      margin: "56px 0",
       border: "none",
-      borderTop: `1px solid ${hairline}`,
+      borderTop: `2px solid ${hairline}`,
     },
   };
 }
 
 const EDITORIAL_COLORS: ThemeColors = {
-  primary: "#4A4239", // graphite body
-  accent: "#A8895E", // brushed brass
+  primary: "#3A3328", // deeper warm graphite body
+  accent: "#5C5A52", // slate gray, no chromatic note
   dark: "#1F1A14", // warm near-black ink
   paper: "#F6F1E8", // warm ivory
   muted: "#8A7E6A", // taupe meta
