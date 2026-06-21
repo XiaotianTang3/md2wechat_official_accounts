@@ -5,10 +5,39 @@ import { deriveDerivedTokens } from "@/lib/color";
 export const PALETTES: ColorPalette[] = [
   { id: "default", name: "默认" },
   {
+    id: "caramelCocoa",
+    name: "焦糖·可可",
+    description: "Brunello Cucinelli / Loro Piana 意式软奢。文化、人物、生活方式。",
+    themes: ["editorial"],
+    inspiration: ["Brunello Cucinelli", "Loro Piana"],
+    colors: {
+      primary: "#5A4030",
+      accent: "#8B5A3C",
+      dark: "#2A1F15",
+      paper: "#F8F2E5",
+      muted: "#8A7860",
+    },
+  },
+  {
+    id: "inkOxblood",
+    name: "墨红·牛津黑",
+    description: "Margaret Howell / Turnbull & Asser 牛津风。学术、评论、深度。",
+    themes: ["editorial"],
+    inspiration: ["Margaret Howell", "Turnbull & Asser"],
+    colors: {
+      primary: "#3A2A22",
+      accent: "#6E2418",
+      dark: "#1F1A14",
+      paper: "#F5F0E8",
+      muted: "#7A685C",
+    },
+  },
+  {
     id: "ivoryInkBrass",
     name: "象牙·墨黑·黄铜",
-    description: "Hermès / Chanel 编辑。商业、财经、长论。",
+    description: "Hermès / Chanel 编辑感。商业、财经、长论。",
     themes: ["editorial"],
+    inspiration: ["Hermès", "Chanel"],
     colors: {
       primary: "#4A4239",
       accent: "#A8895E",
@@ -18,10 +47,25 @@ export const PALETTES: ColorPalette[] = [
     },
   },
   {
+    id: "midnightInk",
+    name: "午夜·深蓝",
+    description: "晚点 LatePost / FT 中文网。科技、商业深度报道。",
+    themes: ["editorial"],
+    inspiration: ["晚点 LatePost", "FT 中文网"],
+    colors: {
+      primary: "#1F2A3D",
+      dark: "#0E1622",
+      accent: "#1F3A6B",
+      muted: "#6E7787",
+      paper: "#F1F0EC",
+    },
+  },
+  {
     id: "oatTobacco",
     name: "燕麦·烟草·深棕",
-    description: "Loro Piana / Bottega 深烟草。生活方式、文化随笔、深度长文。",
+    description: "Loro Piana / Bottega Veneta 深烟草。生活方式、文化随笔、深度长文。",
     themes: ["editorial"],
+    inspiration: ["Loro Piana", "Bottega Veneta"],
     colors: {
       primary: "#5A3A20",
       accent: "#7C4A21",
@@ -35,6 +79,7 @@ export const PALETTES: ColorPalette[] = [
     name: "石色·鼠尾草·黄铜",
     description: "Aesop / Margaret Howell。设计、产品、文化深度。",
     themes: ["editorial"],
+    inspiration: ["Aesop", "Margaret Howell"],
     colors: {
       primary: "#3D3833",
       accent: "#8E9476",
@@ -48,6 +93,7 @@ export const PALETTES: ColorPalette[] = [
     name: "和纸·墨·朱赤",
     description: "The Row / Hato Press 极简。文学、艺术、设计批评。",
     themes: ["editorial"],
+    inspiration: ["The Row", "Hato Press"],
     colors: {
       primary: "#3D362F",
       accent: "#A83A2A",

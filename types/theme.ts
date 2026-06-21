@@ -15,7 +15,10 @@ export type ColorPaletteId =
   | "filmBrown"
   | "violetMist"
   | "warmOrange"
+  | "caramelCocoa"
+  | "inkOxblood"
   | "ivoryInkBrass"
+  | "midnightInk"
   | "oatTobacco"
   | "stoneSage"
   | "washiSumi";
@@ -69,4 +72,10 @@ export type ColorPalette = {
    * warm-paper / accent-link design only ships where it was meant to live.
    */
   themes?: LayoutThemeId[];
+  /**
+   * Brand / publication references that informed the palette. Used in
+   * documentation (README) and as the "why this exists" hook for users
+   * scanning the dropdown.
+   */
+  inspiration?: string[];
 };
