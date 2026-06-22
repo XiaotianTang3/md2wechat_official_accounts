@@ -11,7 +11,7 @@ import {
 import { EditorPane } from "@/components/EditorPane";
 import { PreviewPane } from "@/components/PreviewPane";
 import { Toolbar } from "@/components/Toolbar";
-import { copyRichHtml } from "@/lib/clipboard";
+import { copyRichHtml, copyMarkdown } from "@/lib/clipboard";
 import { exportMarkdownFile, readFileAsText } from "@/lib/file";
 import { applyInlineStyles } from "@/lib/inlineStyles";
 import { markdownToHtml } from "@/lib/markdown";
@@ -126,6 +126,15 @@ export default function Home() {
     }
   }
 
+  async function handleCopyMarkdown() {
+    try {
+      await copyMarkdown(markdown);
+      showCopyHint("已复制");
+    } catch {
+      showCopyHint("复制失败");
+    }
+  }
+
   function handleImportMarkdownClick() {
     importInputRef.current?.click();
   }
@@ -155,6 +164,7 @@ export default function Home() {
   }, []);
 
   const copyWechatDisabled = html.trim() === "" || isPending;
+  const copyMarkdownDisabled = markdown.trim() === "" || isPending;
 
   return (
     <div className="flex h-screen min-h-0 flex-col bg-zinc-100">
@@ -179,7 +189,9 @@ export default function Home() {
         onImportMarkdown={handleImportMarkdownClick}
         onExportMarkdown={handleExportMarkdown}
         onCopyWechat={() => void handleCopyWechat()}
+        onCopyMarkdown={() => void handleCopyMarkdown()}
         copyWechatDisabled={copyWechatDisabled}
+        copyMarkdownDisabled={copyMarkdownDisabled}
         copyHint={copyHint}
       />
       <div className="flex min-h-0 flex-1">

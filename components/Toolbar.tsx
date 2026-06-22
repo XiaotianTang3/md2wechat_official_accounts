@@ -32,7 +32,9 @@ type ToolbarProps = {
   onImportMarkdown: () => void;
   onExportMarkdown: () => void;
   onCopyWechat: () => void;
+  onCopyMarkdown: () => void;
   copyWechatDisabled?: boolean;
+  copyMarkdownDisabled?: boolean;
   copyHint: string | null;
 };
 
@@ -48,7 +50,9 @@ export function Toolbar({
   onImportMarkdown,
   onExportMarkdown,
   onCopyWechat,
+  onCopyMarkdown,
   copyWechatDisabled,
+  copyMarkdownDisabled,
   copyHint,
 }: ToolbarProps) {
   return (
@@ -99,6 +103,14 @@ export function Toolbar({
           onClick={onCopyWechat}
         >
           复制到公众号
+        </button>
+        <button
+          type="button"
+          className={btnSecondary}
+          disabled={copyMarkdownDisabled}
+          onClick={onCopyMarkdown}
+        >
+          复制 Markdown
         </button>
       </div>
     </header>
