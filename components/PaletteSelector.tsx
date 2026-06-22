@@ -20,7 +20,7 @@ type PaletteSelectorProps = {
 
 function SwatchDots({ colors }: { colors: ThemeColors }) {
   const dots = useMemo(
-    () => [colors.primary, colors.accent, colors.paper],
+    () => [colors.paper, colors.dark, colors.accent],
     [colors],
   );
   return (
@@ -28,7 +28,7 @@ function SwatchDots({ colors }: { colors: ThemeColors }) {
       {dots.map((c) => (
         <span
           key={c}
-          className="h-2.5 w-2.5 rounded-full border border-zinc-300"
+          className="h-3.5 w-3.5 rounded-full border border-zinc-300"
           style={{ backgroundColor: c }}
         />
       ))}
