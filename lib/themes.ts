@@ -1,10 +1,27 @@
 import type { LayoutTheme, LayoutThemeId, Theme, ThemeColors } from "@/types/theme";
+import { mixColor } from "@/lib/color";
 
 const mono =
   'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
 
+// Heading serif stack — all system Chinese serif fonts so the stack resolves
+// on every WeChat reader's device (macOS / Windows / iOS / Android).
+// WeChat preserves font-family in inline styles per wenyan-core / mdnice
+// production evidence; the OS will substitute if Source Han Serif isn't
+// installed, falling back to Songti SC / SimSun / 宋体 (still serif).
+const serifHeading =
+  '"Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "STSongti-SC-Regular", "SimSun", "宋体", serif';
+
+// Body sans stack — system Chinese sans so body text stays readable on
+// phones. The WeChat editor's default is PingFang SC / 微软雅黑 / Hiragino
+// Sans GB depending on platform; this stack matches.
+const sansBody =
+  'system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif';
+
 function minimalStyles(c: ThemeColors): Theme["styles"] {
   const { dark, muted } = c;
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -44,7 +61,7 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     },
     p: {
       margin: "0 0 24px",
-      color: "rgba(0,0,0,0.9)",
+      color: dark,
       fontSize: "17px",
       lineHeight: 1.6,
       letterSpacing: "0.034em",
@@ -61,9 +78,9 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     blockquote: {
       margin: "4px 0 24px",
       padding: "0 0 0 14px",
-      borderLeft: "3px solid #D1D5DB",
+      borderLeft: `3px solid ${borderColor}`,
       backgroundColor: "transparent",
-      color: "#4B5563",
+      color: muted,
       fontSize: "16px",
       lineHeight: 1.75,
     },
@@ -85,30 +102,29 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
       margin: "0 0 8px",
     },
     a: {
-      color: "#374151",
+      color: dark,
       textDecoration: "underline",
-      textDecorationColor: "#9CA3AF",
-      textUnderlineOffset: "3px",
+      textDecorationColor: muted,
     },
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 24px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -118,24 +134,24 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
       lineHeight: 1.6,
     },
     thead: {
-      backgroundColor: "#F3F4F6",
+      backgroundColor: surface,
       color: dark,
     },
     tbody: {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: "1px solid #E5E7EB",
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 600,
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: "1px solid #E5E7EB",
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -146,13 +162,14 @@ function minimalStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: "1px solid #E5E7EB",
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function starshipStyles(c: ThemeColors): Theme["styles"] {
   const { primary, accent, dark, muted } = c;
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -196,7 +213,7 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
     },
     p: {
       margin: "0 0 20px",
-      color: "#14161A",
+      color: dark,
       fontSize: "15px",
       lineHeight: 1.6,
       letterSpacing: "0.034em",
@@ -278,18 +295,18 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
       backgroundColor: "#FFFFFF",
     },
     tr: {
-      borderBottom: "1px solid #D7E3F0",
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "8px 12px",
       textAlign: "left",
       fontWeight: 700,
-      border: "1px solid #D7E3F0",
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "8px 12px",
-      border: "1px solid #D7E3F0",
-      color: "#14161A",
+      border: `1px solid ${borderColor}`,
+      color: dark,
     },
     img: {
       display: "block",
@@ -299,15 +316,17 @@ function starshipStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: "1px solid #CBD5E1",
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function studyDailyStyles(c: ThemeColors): Theme["styles"] {
   const { accent, dark, muted } = c;
+  // Soft yellow stays hardcoded — it's part of studyDaily's visual identity.
   const softYellow = "#FFF9D6";
-  const borderGray = "#E5E7EB";
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -400,22 +419,22 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 22px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -432,17 +451,17 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: `1px solid ${borderGray}`,
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 700,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -453,15 +472,15 @@ function studyDailyStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "36px 0",
       border: "none",
-      borderTop: `1px solid ${borderGray}`,
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
 
 function xinhuaStyles(c: ThemeColors): Theme["styles"] {
   const { primary, accent, dark, muted } = c;
-  const borderGray = "#E5E7EB";
-  const headerTint = "#E5F0F7";
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const borderColor = c.border ?? mixColor(c.paper, c.dark, 0.18);
 
   return {
     section: {
@@ -549,22 +568,22 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
     code: {
       fontFamily: mono,
       fontSize: "0.9em",
-      backgroundColor: "#F3F4F6",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       padding: "0.12em 0.35em",
       borderRadius: "3px",
     },
     pre: {
       margin: "0 0 20px",
       padding: "14px 16px",
-      backgroundColor: "#F6F7F8",
-      color: "#111827",
+      backgroundColor: surface,
+      color: dark,
       fontSize: "14px",
       lineHeight: 1.65,
       borderRadius: "4px",
       overflowX: "auto",
       fontFamily: mono,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     table: {
       width: "100%",
@@ -574,24 +593,24 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
       lineHeight: 1.6,
     },
     thead: {
-      backgroundColor: headerTint,
+      backgroundColor: surface,
       color: primary,
     },
     tbody: {
       backgroundColor: "#ffffff",
     },
     tr: {
-      borderBottom: `1px solid ${borderGray}`,
+      borderBottom: `1px solid ${borderColor}`,
     },
     th: {
       padding: "9px 10px",
       textAlign: "left",
       fontWeight: 700,
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
     },
     td: {
       padding: "9px 10px",
-      border: `1px solid ${borderGray}`,
+      border: `1px solid ${borderColor}`,
       color: dark,
     },
     img: {
@@ -603,7 +622,7 @@ function xinhuaStyles(c: ThemeColors): Theme["styles"] {
     hr: {
       margin: "32px 0",
       border: "none",
-      borderTop: `1px solid ${borderGray}`,
+      borderTop: `1px solid ${borderColor}`,
     },
   };
 }
@@ -640,6 +659,180 @@ const XINHUA_COLORS: ThemeColors = {
   muted: "#888888",
 };
 
+// --- editorial (报刊) — premium / printed-newspaper feel ---
+// Warm off-white paper, warm near-black ink, hairline rules, single
+// restrained accent. Designed to read well on phone screens and survive
+// WeChat paste. Defaults to ivory + ink + brass (Hermès / Chanel editorial).
+function editorialStyles(c: ThemeColors): Theme["styles"] {
+  const { accent, dark } = c;
+  // `resolvePaletteColors` always populates `surface` and `border`; the
+  // fallback here only fires for callers that bypass it (e.g. tests).
+  const surface = c.surface ?? mixColor(c.paper, c.dark, 0.06);
+  const hairline = c.border ?? mixColor(c.paper, c.dark, 0.18);
+
+  return {
+    section: {
+      margin: "0",
+      padding: "0",
+      backgroundColor: c.paper,
+      color: dark,
+      fontFamily: sansBody,
+      borderRadius: "0",
+      border: "none",
+      boxShadow: "none",
+    },
+    h1: {
+      margin: "0 0 32px",
+      padding: "0 0 14px",
+      color: dark,
+      fontFamily: serifHeading,
+      fontSize: "32px",
+      fontWeight: 700,
+      lineHeight: 1.2,
+      letterSpacing: "0.08em",
+      borderBottom: `2px solid ${hairline}`,
+    },
+    h2: {
+      margin: "48px 0 16px",
+      padding: "0 0 8px",
+      color: dark,
+      fontFamily: serifHeading,
+      fontSize: "22px",
+      fontWeight: 700,
+      lineHeight: 1.4,
+      letterSpacing: "0.04em",
+      borderBottom: `3px solid ${accent}`,
+    },
+    h3: {
+      margin: "32px 0 14px",
+      padding: "0",
+      color: dark,
+      fontFamily: serifHeading,
+      fontSize: "19px",
+      fontWeight: 700,
+      lineHeight: 1.4,
+      letterSpacing: "0.02em",
+    },
+    p: {
+      margin: "0 0 24px",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+      letterSpacing: "0.02em",
+      textAlign: "left",
+    },
+    strong: {
+      color: accent,
+      fontWeight: 700,
+    },
+    em: {
+      color: c.muted,
+      fontStyle: "italic",
+      letterSpacing: "0.04em",
+    },
+    blockquote: {
+      margin: "8px 0 28px",
+      padding: "12px 0 12px 20px",
+      borderLeft: `3px solid ${accent}`,
+      backgroundColor: "transparent",
+      color: dark,
+      fontFamily: serifHeading,
+      fontSize: "16px",
+      lineHeight: 1.85,
+      fontStyle: "italic",
+      letterSpacing: "0.03em",
+    },
+    ul: {
+      margin: "0 0 24px",
+      paddingLeft: "1.35em",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+    },
+    ol: {
+      margin: "0 0 24px",
+      paddingLeft: "1.35em",
+      color: dark,
+      fontSize: "17px",
+      lineHeight: 1.85,
+    },
+    li: {
+      margin: "0 0 8px",
+    },
+    a: {
+      color: accent,
+      textDecoration: `underline ${hairline}`,
+    },
+    code: {
+      fontFamily: mono,
+      fontSize: "0.9em",
+      backgroundColor: surface,
+      color: accent,
+      padding: "0.12em 0.35em",
+      borderRadius: "3px",
+    },
+    pre: {
+      margin: "0 0 24px",
+      padding: "14px 16px",
+      backgroundColor: surface,
+      color: dark,
+      fontSize: "14px",
+      lineHeight: 1.7,
+      borderRadius: "4px",
+      overflowX: "auto",
+      fontFamily: mono,
+      border: `1px solid ${hairline}`,
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      margin: "8px 0 24px",
+      fontSize: "15px",
+      lineHeight: 1.7,
+    },
+    thead: {
+      backgroundColor: surface,
+      color: accent,
+      borderBottom: `2px solid ${accent}`,
+    },
+    tbody: {
+      backgroundColor: "transparent",
+    },
+    tr: {
+      borderBottom: `1px solid ${hairline}`,
+    },
+    th: {
+      padding: "9px 10px",
+      textAlign: "left",
+      fontWeight: 600,
+      border: `1px solid ${hairline}`,
+    },
+    td: {
+      padding: "9px 10px",
+      border: `1px solid ${hairline}`,
+      color: dark,
+    },
+    img: {
+      display: "block",
+      margin: "8px 0 24px",
+      borderRadius: "2px",
+    },
+    hr: {
+      margin: "56px 0",
+      border: "none",
+      borderTop: `2px solid ${hairline}`,
+    },
+  };
+}
+
+const EDITORIAL_COLORS: ThemeColors = {
+  primary: "#3A3328", // deeper warm graphite body
+  accent: "#5C5A52", // slate gray, no chromatic note
+  dark: "#1F1A14", // warm near-black ink
+  paper: "#F6F1E8", // warm ivory
+  muted: "#8A7E6A", // taupe meta
+};
+
 export const LAYOUT_THEMES: LayoutTheme[] = [
   {
     id: "minimal",
@@ -664,6 +857,12 @@ export const LAYOUT_THEMES: LayoutTheme[] = [
     name: "仿新华社",
     defaultColors: XINHUA_COLORS,
     createStyles: xinhuaStyles,
+  },
+  {
+    id: "editorial",
+    name: "报刊",
+    defaultColors: EDITORIAL_COLORS,
+    createStyles: editorialStyles,
   },
 ];
 
@@ -690,7 +889,9 @@ export const studyDaily = createTheme("studyDaily");
 
 export const xinhua = createTheme("xinhua");
 
-export const THEMES: Theme[] = [minimal, starship, studyDaily, xinhua];
+export const editorial = createTheme("editorial");
+
+export const THEMES: Theme[] = [minimal, starship, studyDaily, xinhua, editorial];
 
 export const DEFAULT_THEME_ID = "minimal" as const;
 

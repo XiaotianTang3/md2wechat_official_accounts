@@ -11,7 +11,7 @@ import {
 import { EditorPane } from "@/components/EditorPane";
 import { PreviewPane } from "@/components/PreviewPane";
 import { Toolbar } from "@/components/Toolbar";
-import { copyRichHtml } from "@/lib/clipboard";
+import { copyRichHtml, copyMarkdown } from "@/lib/clipboard";
 import { exportMarkdownFile, readFileAsText } from "@/lib/file";
 import { applyInlineStyles } from "@/lib/inlineStyles";
 import { markdownToHtml } from "@/lib/markdown";
@@ -26,6 +26,7 @@ import {
 } from "@/lib/storage";
 import {
   getDefaultColorsForLayout,
+  isPaletteValidForLayout,
   normalizeStoredPaletteId,
   resolvePaletteColors,
 } from "@/lib/palettes";
@@ -67,7 +68,13 @@ export default function Home() {
     const initialLayoutId =
       tid !== null && isThemeId(tid) ? tid : DEFAULT_THEME_ID;
     setLayoutId(initialLayoutId);
-    setPaletteId(normalizeStoredPaletteId(pid));
+    const initialPaletteId = isPaletteValidForLayout(
+      normalizeStoredPaletteId(pid),
+      initialLayoutId,
+    )
+      ? normalizeStoredPaletteId(pid)
+      : "default";
+    setPaletteId(initialPaletteId);
     setStorageReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -79,6 +86,9 @@ export default function Home() {
     savePaletteId(paletteId);
   }, [markdown, layoutId, paletteId, storageReady]);
 
+  // Premium palettes (e.g. editorial-only) must not survive a theme switch.
+  // Done in the change handler (not an effect) to avoid cascading renders.
+
   useEffect(() => {
     const id = ++requestId.current;
     void markdownToHtml(markdown).then((raw) => {
@@ -89,6 +99,14 @@ export default function Home() {
       });
     });
   }, [markdown, currentTheme]);
+
+  function handleThemeIdChange(id: string) {
+    if (!isThemeId(id)) return;
+    setLayoutId(id);
+    if (!isPaletteValidForLayout(paletteId, id)) {
+      setPaletteId("default");
+    }
+  }
 
   function showCopyHint(message: string) {
     if (hintTimer.current) clearTimeout(hintTimer.current);
@@ -102,6 +120,15 @@ export default function Home() {
   async function handleCopyWechat() {
     try {
       await copyRichHtml(html, markdown);
+      showCopyHint("已复制");
+    } catch {
+      showCopyHint("复制失败");
+    }
+  }
+
+  async function handleCopyMarkdown() {
+    try {
+      await copyMarkdown(markdown);
       showCopyHint("已复制");
     } catch {
       showCopyHint("复制失败");
@@ -137,6 +164,7 @@ export default function Home() {
   }, []);
 
   const copyWechatDisabled = html.trim() === "" || isPending;
+  const copyMarkdownDisabled = markdown.trim() === "" || isPending;
 
   return (
     <div className="flex h-screen min-h-0 flex-col bg-zinc-100">
@@ -152,9 +180,7 @@ export default function Home() {
       <Toolbar
         themes={THEMES}
         themeId={layoutId}
-        onThemeIdChange={(id) => {
-          if (isThemeId(id)) setLayoutId(id);
-        }}
+        onThemeIdChange={handleThemeIdChange}
         paletteId={paletteId}
         onPaletteIdChange={setPaletteId}
         paletteSwatchColors={resolvePaletteColors(layoutId, paletteId)}
@@ -163,7 +189,9 @@ export default function Home() {
         onImportMarkdown={handleImportMarkdownClick}
         onExportMarkdown={handleExportMarkdown}
         onCopyWechat={() => void handleCopyWechat()}
+        onCopyMarkdown={() => void handleCopyMarkdown()}
         copyWechatDisabled={copyWechatDisabled}
+        copyMarkdownDisabled={copyMarkdownDisabled}
         copyHint={copyHint}
       />
       <div className="flex min-h-0 flex-1">

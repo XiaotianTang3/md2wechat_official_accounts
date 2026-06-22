@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 
-export type LayoutThemeId = "minimal" | "starship" | "studyDaily" | "xinhua";
+export type LayoutThemeId =
+  | "minimal"
+  | "starship"
+  | "studyDaily"
+  | "xinhua"
+  | "editorial";
 
 export type ColorPaletteId =
   | "default"
@@ -9,7 +14,14 @@ export type ColorPaletteId =
   | "teal"
   | "filmBrown"
   | "violetMist"
-  | "warmOrange";
+  | "warmOrange"
+  | "caramelCocoa"
+  | "inkOxblood"
+  | "ivoryInkBrass"
+  | "midnightInk"
+  | "oatTobacco"
+  | "stoneSage"
+  | "washiSumi";
 
 // Phase 1: UI still selects a single "theme" (layout).
 export type ThemeId = LayoutThemeId;
@@ -20,6 +32,18 @@ export type ThemeColors = {
   dark: string;
   paper: string;
   muted: string;
+  /**
+   * Soft surface fill (thead / code / blockquote backgrounds).
+   * Derived as `mix(paper, dark, 0.06)` by `resolvePaletteColors` when
+   * absent; themes can rely on it being populated.
+   */
+  surface?: string;
+  /**
+   * Hairline rule (blockquote left border / table cell borders / hr).
+   * Derived as `mix(paper, dark, 0.18)` by `resolvePaletteColors` when
+   * absent; themes can rely on it being populated.
+   */
+  border?: string;
 };
 
 export type Theme = {
@@ -42,4 +66,16 @@ export type ColorPalette = {
   description?: string;
   /** `default` intentionally has no fixed colors. */
   colors?: ThemeColors;
+  /**
+   * Restrict this palette to specific layout themes. Omit / empty = applies
+   * to every theme. Premium palettes are scoped to `editorial` so the
+   * warm-paper / accent-link design only ships where it was meant to live.
+   */
+  themes?: LayoutThemeId[];
+  /**
+   * Brand / publication references that informed the palette. Used in
+   * documentation (README) and as the "why this exists" hook for users
+   * scanning the dropdown.
+   */
+  inspiration?: string[];
 };
