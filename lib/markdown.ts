@@ -1,4 +1,5 @@
 import { defaultSchema } from "hast-util-sanitize";
+import rehypeHighlight from "rehype-highlight";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
@@ -14,10 +15,15 @@ import { substituteRefsInMarkdown } from "@/lib/image-map";
  */
 export type { Theme } from "@/types/theme";
 
-// 在默认 sanitize schema 上额外允许 data: URL（用于本地图片的 data URL 渲染）。
-// 协议列表是合集，不影响 http/https 的原有行为。
+// 在默认 sanitize schema 上：
+// 1. 允许 span 上携带 className（rehype-highlight 给代码 token 加的 hljs-* 类需要它穿过 sanitize）
+// 2. 允许 data: 协议（本地图片的 data URL 渲染需要）
 const sanitizeSchema = {
   ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    span: ["className"],
+  },
   protocols: {
     ...defaultSchema.protocols,
     src: [...(defaultSchema.protocols?.src ?? []), "data"],
@@ -28,6 +34,7 @@ const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype, { allowDangerousHtml: false })
+  .use(rehypeHighlight, { detect: true, ignoreMissing: true })
   .use(rehypeSanitize, sanitizeSchema)
   .use(rehypeStringify);
 
