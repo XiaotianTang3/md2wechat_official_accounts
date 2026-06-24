@@ -179,15 +179,6 @@ export default function Home() {
     }
   }
 
-  async function handleCopyMarkdown() {
-    try {
-      await copyMarkdown(markdown);
-      showCopyHint("已复制");
-    } catch {
-      showCopyHint("复制失败");
-    }
-  }
-
   function handleImportMarkdownClick() {
     importInputRef.current?.click();
   }
