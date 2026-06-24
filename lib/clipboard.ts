@@ -110,31 +110,3 @@ export async function copyMarkdown(text: string): Promise<void> {
     throw new Error("execCommand('copy') 失败");
   }
 }
-
-export async function copyMarkdown(text: string): Promise<void> {
-  if (typeof window === "undefined") {
-    throw new Error("copyMarkdown 仅在浏览器中可用");
-  }
-  if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-  // 老浏览器 / 权限受限环境：降级到 execCommand
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  ta.setAttribute("readonly", "");
-  ta.style.position = "fixed";
-  ta.style.left = "-9999px";
-  ta.style.top = "0";
-  document.body.appendChild(ta);
-  ta.select();
-  let ok = false;
-  try {
-    ok = document.execCommand("copy");
-  } finally {
-    document.body.removeChild(ta);
-  }
-  if (!ok) {
-    throw new Error("execCommand('copy') 失败");
-  }
-}
