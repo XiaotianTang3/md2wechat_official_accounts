@@ -31,6 +31,7 @@ type ToolbarProps = {
   primaryAccentColor: string;
   onImportMarkdown: () => void;
   onExportMarkdown: () => void;
+  onInsertImage: () => void;
   onCopyWechat: () => void;
   onCopyMarkdown: () => void;
   copyWechatDisabled?: boolean;
@@ -49,6 +50,7 @@ export function Toolbar({
   primaryAccentColor,
   onImportMarkdown,
   onExportMarkdown,
+  onInsertImage,
   onCopyWechat,
   onCopyMarkdown,
   copyWechatDisabled,
@@ -87,6 +89,12 @@ export function Toolbar({
         <button type="button" className={btnSecondary} onClick={onExportMarkdown}>
           导出 Markdown
         </button>
+        <button type="button" className={btnSecondary} onClick={onInsertImage}>
+          插入图片
+        </button>
+        <span className="hidden text-xs text-zinc-500 lg:inline">
+          图片仅在编辑器内可见，复制到公众号后变成占位提示
+        </span>
       </div>
 
       <div className="ml-auto flex flex-wrap items-center gap-2">

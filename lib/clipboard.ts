@@ -3,6 +3,9 @@
  * 必须使用已 applyInlineStyles 的 HTML 字符串，勿从预览 DOM 抓取。
  */
 
+import type { ImageMap } from "@/lib/image-map";
+import { replaceImgsWithMarkers } from "@/lib/image-map";
+
 function copyViaExecCommand(html: string): void {
   const div = document.createElement("div");
   div.setAttribute("contenteditable", "true");
@@ -49,17 +52,26 @@ function canUseClipboardWrite(): boolean {
 export async function copyRichHtml(
   html: string,
   plainText: string,
+  options?: { imageMap?: ImageMap },
 ): Promise<void> {
   if (typeof window === "undefined") {
     throw new Error("copyRichHtml 仅在浏览器中可用");
   }
 
+  // 把本地图片的 <img src="data:..."> 替换成占位提示，确保公众号粘贴时不会有坏图。
+  // 远程 http(s) 图片不受影响，原样保留（best-effort）。
+  const map = options?.imageMap ?? {};
+  const { html: replacedHtml } = replaceImgsWithMarkers(html, map);
+  // plain text：保留原始（远程图片 markdown 文本会保留；本地图片 markdown 里的 ref 也保留）
+  // 公众号粘贴时如果走纯文本路径，ref 字符串会作为提示。
+  const replacedPlain = plainText;
+
   if (canUseClipboardWrite()) {
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
-          "text/html": new Blob([html], { type: "text/html" }),
-          "text/plain": new Blob([plainText], { type: "text/plain" }),
+          "text/html": new Blob([replacedHtml], { type: "text/html" }),
+          "text/plain": new Blob([replacedPlain], { type: "text/plain" }),
         }),
       ]);
       return;
@@ -68,7 +80,35 @@ export async function copyRichHtml(
     }
   }
 
-  copyViaExecCommand(html);
+  copyViaExecCommand(replacedHtml);
+}
+
+export async function copyMarkdown(text: string): Promise<void> {
+  if (typeof window === "undefined") {
+    throw new Error("copyMarkdown 仅在浏览器中可用");
+  }
+  if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  // 老浏览器 / 权限受限环境：降级到 execCommand
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  ta.style.top = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try {
+    ok = document.execCommand("copy");
+  } finally {
+    document.body.removeChild(ta);
+  }
+  if (!ok) {
+    throw new Error("execCommand('copy') 失败");
+  }
 }
 
 export async function copyMarkdown(text: string): Promise<void> {
