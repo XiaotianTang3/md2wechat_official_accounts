@@ -9,15 +9,18 @@ import {
   type ChangeEvent,
 } from "react";
 import { EditorPane, type EditorPaneHandle } from "@/components/EditorPane";
+import { ImageListPanel } from "@/components/ImageListPanel";
 import { PreviewPane } from "@/components/PreviewPane";
 import { Toolbar } from "@/components/Toolbar";
 import { copyRichHtml, copyMarkdown } from "@/lib/clipboard";
 import { exportMarkdownFile, readFileAsText } from "@/lib/file";
+import { deleteImage as deleteImageFromIDB } from "@/lib/image-store";
 import {
   type ImageMap,
   insertImage,
   loadImageMap,
   migrateDataUrlsInDraft,
+  removeImageFromMarkdown,
 } from "@/lib/image-map";
 import { applyInlineStyles } from "@/lib/inlineStyles";
 import { markdownToHtml } from "@/lib/markdown";
@@ -226,6 +229,20 @@ export default function Home() {
     }
   }
 
+  async function handleDeleteImage(id: string) {
+    try {
+      await deleteImageFromIDB(id);
+      const nextMap = { ...imageMapRef.current };
+      delete nextMap[id];
+      imageMapRef.current = nextMap;
+      setImageMap(nextMap);
+      setMarkdown((m) => removeImageFromMarkdown(m, id));
+      showCopyHint("已删除");
+    } catch (err) {
+      showCopyHint(err instanceof Error ? err.message : "删除失败");
+    }
+  }
+
   useEffect(() => {
     return () => {
       if (hintTimer.current) clearTimeout(hintTimer.current);
@@ -272,6 +289,11 @@ export default function Home() {
         copyWechatDisabled={copyWechatDisabled}
         copyMarkdownDisabled={copyMarkdownDisabled}
         copyHint={copyHint}
+      />
+      <ImageListPanel
+        markdown={markdown}
+        imageMap={imageMap}
+        onDelete={(id) => void handleDeleteImage(id)}
       />
       <div className="flex min-h-0 flex-1">
         <EditorPane ref={editorRef} value={markdown} onChange={setMarkdown} />

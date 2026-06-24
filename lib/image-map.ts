@@ -136,6 +136,21 @@ export async function insertImage(
   return { id, dataUrl, reused: false };
 }
 
+/**
+ * 从 markdown 里删除某个 image: 引用，包括该 ref 所在行。
+ * 顺带把 3+ 个连续换行压缩成 2 个（避免删除后留大段空行）。
+ */
+export function removeImageFromMarkdown(md: string, id: string): string {
+  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // 匹配整段 ![alt](image:id[,size])，前面可有空白，后面可有空白/换行
+  const refRegex = new RegExp(
+    `\\s*!?\\[[^\\]]*\\]\\(image:${escaped}(?:,[^)]+)?\\)\\s*`,
+    "g",
+  );
+  const cleaned = md.replace(refRegex, " ");
+  return cleaned.replace(/\n{3,}/g, "\n\n");
+}
+
 /** 把历史草稿里的 data URL 提取出来，迁到 IndexedDB。返回迁移后的 markdown 和新 map。 */
 export async function migrateDataUrlsInDraft(
   md: string,
